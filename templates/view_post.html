@@ -8,21 +8,28 @@
 </head>
 
 <body>
-    <h1>{{ post['title'] }}</h1>
-    <p>Posted by User {{ post['user_id'] }}</p>
-    {% if post['type'] == 'photo' %}
-    <img src="{{ post['content'] }}" alt="Post Image">
-    {% else %}
-    <p>{{ post['content'] }}</p>
-    {% endif %}
-    {% if user_id == post["user_id"] %}
-    <form action="/delete_post" method="POST">
-        <input type="hidden" name="id" value="{{ post['id'] }}">
-        <button type="submit">Delete</button>
-    </form>
-    {% endif %}
-    <br>
-    <a href="/posts">Back to Posts</a>
+    <div class="post-container">
+        <h1>{{ post['title'] }}</h1>
+        <p>Posted by: {% if post.get('user') and post['user'].get('username') %}{{ post['user']['username'] }}{% else
+            %}User {{ post['user_id'] }}{% endif %}</p>
+
+        <!-- Display the content -->
+        <p>{{ post['content'] }}</p>
+
+        <!-- Display the image if available -->
+        {% if post.get('image_url') %}
+        <img src="{{ url_for('static', filename=post.get('image_url')) }}" alt="Post Image" class="post-image">
+        {% endif %}
+
+        {% if user_id == post["user_id"] %}
+        <form action="/delete_post" method="POST">
+            <input type="hidden" name="id" value="{{ post['id'] }}">
+            <button type="submit" class="delete-button">Delete</button>
+        </form>
+        {% endif %}
+
+        <a href="/posts" class="back-button">Back to Posts</a>
+    </div>
 </body>
 
 </html>

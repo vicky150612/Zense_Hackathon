@@ -37,6 +37,12 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+        .post-image {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 10px 0;
+        }
     </style>
 </head>
 
@@ -45,30 +51,32 @@
     <button onclick="showModal()">Create New Post</button><br>
     <ul>
         {% for post in posts %}
-        <li>{{ post["title"] }}: {{ post["content"] }} (by User {{ post["user_id"] }})
+        <li>
+            <h3>{{ post["title"] }}</h3>
+            <p>{{ post["content"] }}</p>
+            {% if post.get("image_url") %}
+            <img src="{{ url_for('static', filename=post.get('image_url')) }}" class="post-image" alt="Post image">
+            {% endif %}
+            <p>(by User {{ post["user_id"] }})</p>
             <button>
                 <a href="/post/{{ post['id'] }}">View</a>
             </button>
         </li>
         {% endfor %}
-
     </ul>
-
     <a href="/main_page">Back to Main Page</a>
+
     <!-- Modal for creating a new post -->
     <div id="createPostModal">
         <div class="modal-content">
             <span class="close" onclick="hideModal()">&times;</span>
             <h2>Create Post</h2>
-            <form method="POST" action="/create_post/{{ user_id }}">
-                <input type="text" name="title" placeholder="title" required><br>
-                <label for="type">Type:</label>
-                <select id="type" name="type">
-                    <option value="text">Text</option>
-                    <option value="photo">Photo</option>
-                </select><br>
+            <form method="POST" action="/create_post" enctype="multipart/form-data">
+                <input type="text" name="title" placeholder="Title" required><br>
                 <label for="content">Content:</label>
                 <textarea id="content" name="content" required></textarea><br>
+                <label for="profile_picture">Image (optional):</label>
+                <input type="file" id="profile_picture" name="profile_picture" accept="image/png, image/jpeg"><br>
                 <button type="submit">Post</button>
             </form>
         </div>

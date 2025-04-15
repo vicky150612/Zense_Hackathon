@@ -39,6 +39,20 @@
             color: black;
             text-decoration: none;
         }
+
+        .item-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #f9f9f9;
+        }
+
+        .item-image {
+            max-width: 200px;
+            max-height: 200px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
@@ -51,9 +65,9 @@
         <div class="modal-content">
             <span class="close" onclick="hideLostFoundModal()">×</span>
             <h2>Post Lost and Found</h2>
-            <form method="POST" action="/create_lost_item">
-                <label for="photo">Photo:</label>
-                <input type="file" id="photo" name="photo" accept="image/png, image/jpeg" required><br>
+            <form method="POST" action="/create_lost_item" enctype="multipart/form-data">
+                <label for="item_photo">Photo:</label>
+                <input type="file" id="item_photo" name="item_photo" accept="image/png, image/jpeg" required><br>
                 <label for="place_found">Place Found:</label>
                 <input type="text" id="place_found" name="place_found" required><br>
                 <label for="collect">Place to Collect:</label>
@@ -65,11 +79,18 @@
         </div>
     </div>
 
-    <ul>
+    <div class="items-container">
         {% for item in items %}
-        <li>Photo: {{ item.photo }}, Found at: {{ item.place_found }}, Collect at: {{ item.collect }}</li>
+        <div class="item-card">
+            {% if item.get("image_url") %}
+            <img src="{{ url_for('static', filename=item.get('image_url')) }}" class="item-image" alt="Item image">
+            {% endif %}
+            <p><strong>Found at:</strong> {{ item.place_found }}</p>
+            <p><strong>Collect at:</strong> {{ item.collect }}</p>
+            <p><strong>Contact:</strong> {{ item.contact }}</p>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
     <a href="/main_page">Back to Main Page</a>
 
     <!-- JavaScript to control modal -->
