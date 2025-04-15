@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ride Share</title>
+    <style>
+        #createRideModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Ride Share</h1>
+    <button onclick="showRideModal()">Post a Ride</button><br>
+
+    <!-- Modal for creating a new ride -->
+    <div id="createRideModal">
+        <div class="modal-content">
+            <span class="close" onclick="hideRideModal()">×</span>
+            <h2>Create Ride</h2>
+            <form method="POST" action="/create_ride">
+                <label for="from">From:</label>
+                <input type="text" id="from" name="from" required><br>
+                <label for="to">To:</label>
+                <input type="text" id="to" name="to" required><br>
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required><br>
+                <label for="time">Time:</label>
+                <input type="time" id="time" name="time" required><br>
+                <label for="contact">Contact Information:</label>
+                <input type="text" id="contact" name="contact" required><br>
+                <button type="submit">Post Ride</button>
+            </form>
+        </div>
+    </div>
+
+    <ul>
+        {% for ride in rides %}
+        <li>From: {{ ride.from }} To: {{ ride.to }} on {{ ride.date }} at {{ ride.time }}
+            {% if ride.user_id == user_id %}
+            <a href="/delete_ride/{{ ride.id }}">Delete</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <a href="/main_page">Back to Main Page</a>
+    <!-- JavaScript to control modal visibility -->
+    <script>
+        function showRideModal() {
+            document.getElementById('createRideModal').style.display = 'block';
+        }
+        function hideRideModal() {
+            document.getElementById('createRideModal').style.display = 'none';
+        }
+        document.getElementById('createRideModal').addEventListener('click', function (event) {
+            if (event.target == this) {
+                hideRideModal();
+            }
+        });
+    </script>
+
+    <!-- Original Cloudflare script from ride_share.html -->
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'92f94a56cd91bfc2',t:'MTc0NDUyOTc2NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>

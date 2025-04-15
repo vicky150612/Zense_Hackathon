@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Messaging</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const socket = io();
+            const room = 'chat_room';  // For simplicity, using a single room
+
+            socket.on('connect', () => {
+                socket.emit('join', { room: room });
+            });
+
+            socket.on('message', (data) => {
+                const messages = document.getElementById('messages');
+                const p = document.createElement('p');
+                p.textContent = data;
+                messages.appendChild(p);
+            });
+
+            document.getElementById('send').addEventListener('click', () => {
+                const messageInput = document.getElementById('message');
+                const content = messageInput.value;
+                socket.emit('message', {
+                    room: room,
+                    user_id: "{{user_id}}",
+                    username: "{{username}}",
+                    content: content
+                });
+                messageInput.value = '';
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Messaging</h1>
+    <h2>Chat</h2>
+    <div id="messages">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    <input type="text" id="message" placeholder="Type a message">
+    <button id="send">Send</button>
+    <br>
+    <a href="/main_page">Back to Main Page</a>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9303b163ba477b96',t:'MTc0NDYzODg0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>

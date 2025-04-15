@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Profile</title>
+    <style>
+        #editProfileModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        input[readonly] {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Profile</h1>
+    <p>Username: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Bio: {{ user.bio }}</p>
+
+    {% if user.profile_picture %}
+    <img src="{{ url_for('static', filename=user.profile_picture) }}" alt="Profile Picture"
+        style="width:100px;height:100px;">
+    {% else %}
+    <img src="{{ url_for('static', filename='uploads/default.jpg') }}" alt="Profile Picture"
+        style="width:100px;height:100px;">
+    {% endif %}
+
+    <br>
+    <button onclick="showEditModal()">Edit Profile</button><br>
+    <button onclick="window.location.href='/logout'">Logout</button><br>
+    <button onclick="window.location.href='/change_password'">Change Password</button><br>
+    <a href="/main_page">Back to Main Page</a>
+
+    <!-- Modal for editing profile -->
+    <div id="editProfileModal">
+        <div class="modal-content">
+            <span class="close" onclick="hideEditModal()">×</span>
+            <h2>Edit Profile</h2>
+            <form method="POST" action="/edit_profile" enctype="multipart/form-data">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}" readonly><br>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" readonly><br>
+                <label for="bio">Bio:</label>
+                <textarea id="bio" name="bio">{{ user.bio }}</textarea><br>
+                <label for="profile_picture">Profile Picture:</label>
+                <input type="file" id="profile_picture" name="profile_picture" accept="image/png, image/jpeg"><br>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript to control modal -->
+    <script>
+        function showEditModal() {
+            document.getElementById('editProfileModal').style.display = 'block';
+        }
+        function hideEditModal() {
+            document.getElementById('editProfileModal').style.display = 'none';
+        }
+        document.getElementById('editProfileModal').addEventListener('click', function (event) {
+            if (event.target === this) {
+                hideEditModal();
+            }
+        });
+    </script>
+
+    <!-- Original Cloudflare script from profile.html -->
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9304d77a9f2606f2',t:'MTc0NDY1MDg4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>
