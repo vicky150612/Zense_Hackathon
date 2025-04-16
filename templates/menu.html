@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Menu</title>
+    <link rel="stylesheet" href="/static/Styles/menu.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Day Selector Wheel -->
+        <div class="day-wheel-container">
+            <div class="day-wheel">
+                <div class="day-circle">
+                    {% for day in days %}
+                    {#
+                    Determine abbreviations:
+                    - "Monday": "M"
+                    - "Tuesday": "T"
+                    - "Wednesday": "W"
+                    - "Thursday": "Th"
+                    - "Friday": "F"
+                    - "Saturday": "Sa"
+                    - "Sunday": "Su"
+                    #}
+                    {% if day == 'Thursday' %}
+                    {% set abbr = 'Th' %}
+                    {% elif day == 'Saturday' %}
+                    {% set abbr = 'Sa' %}
+                    {% elif day == 'Sunday' %}
+                    {% set abbr = 'Su' %}
+                    {% else %}
+                    {% set abbr = day[0] %}
+                    {% endif %}
+
+                    {# You can set the default active day as Wednesday (or any other day) #}
+                    <span class="day-letter{% if day == 'Wednesday' %} active{% endif %}" data-day="{{ abbr }}">
+                        {{ abbr }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            {% for day in days %}
+            {# Create the header for each day; hide all except for the default active day (e.g., Wednesday) #}
+            <div class="day-header" id="{{ day|lower }}-header"
+                class="day-header{% if day != 'Wednesday' %} hidden{% endif %}">
+                {{ day.upper() }}
+            </div>
+
+            {# Create the menu content for each day #}
+            <div class="menu-content{% if day == 'Wednesday' %} active{% endif %}" id="{{ day|lower }}-menu">
+                {% for meal, items in menu[day].items() %}
+                <div class="meal-section">
+                    <h3>{{ meal }}</h3>
+                    <ul>
+                        {% for item in items %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="/menu.js"></script>
+    <script>
+        // Get all day letters and menu items
+        const dayLetters = document.querySelectorAll('.day-letter');
+        const dayHeaders = document.querySelectorAll('.day-header');
+        const menuContents = document.querySelectorAll('.menu-content');
+
+        // Initialize with Wednesday active (as set in the template)
+        showDay('W');
+
+        // Add click event listeners to day letters
+        dayLetters.forEach(letter => {
+            letter.addEventListener('click', function () {
+                const day = this.getAttribute('data-day');
+                showDay(day);
+            });
+        });
+
+        // Function to show the selected day
+        function showDay(day) {
+            // Reset all active states
+            dayLetters.forEach(letter => letter.classList.remove('active'));
+            dayHeaders.forEach(header => header.style.display = 'none');
+            menuContents.forEach(content => content.classList.remove('active'));
+
+            // Set active state for the clicked day-letter
+            document.querySelector(`.day-letter[data-day="${day}"]`).classList.add('active');
+
+            // Determine header and menu IDs based on the clicked day letter
+            let headerID, menuID;
+            switch (day) {
+                case 'M':
+                    headerID = 'monday-header';
+                    menuID = 'monday-menu';
+                    break;
+                case 'T':
+                    headerID = 'tuesday-header';
+                    menuID = 'tuesday-menu';
+                    break;
+                case 'W':
+                    headerID = 'wednesday-header';
+                    menuID = 'wednesday-menu';
+                    break;
+                case 'Th':
+                    headerID = 'thursday-header';
+                    menuID = 'thursday-menu';
+                    break;
+                case 'F':
+                    headerID = 'friday-header';
+                    menuID = 'friday-menu';
+                    break;
+                case 'Sa':
+                    headerID = 'saturday-header';
+                    menuID = 'saturday-menu';
+                    break;
+                case 'Su':
+                    headerID = 'sunday-header';
+                    menuID = 'sunday-menu';
+                    break;
+            }
+
+            document.getElementById(headerID).style.display = 'block';
+            document.getElementById(menuID).classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

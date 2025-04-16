@@ -1,0 +1,145 @@
+/* Import modern sans-serif font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Define global variables for theme consistency */
+:root {
+  --bg-primary: #1A1A1A;
+  --bg-secondary: #1E2A44;
+  --accent-primary: #00BFFF;
+  --accent-secondary: #00FF99;
+  --text-primary: #FFFFFF;
+  --text-secondary: #B0B0B0;
+}
+
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 20px;
+  line-height: 1.6;
+}
+
+/* Header styling */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 5px var(--accent-primary);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 5px var(--accent-primary);
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Messages container */
+#messages {
+  max-width: 800px;
+  margin: 0 auto 20px;
+  padding: 15px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-primary);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  height: 400px;
+  overflow-y: auto;
+}
+
+#messages p {
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  word-wrap: break-word;
+}
+
+/* Input and button styling */
+input[type="text"] {
+  padding: 10px;
+  width: 70%;
+  max-width: 500px;
+  background: var(--bg-primary);
+  border: 1px solid var(--accent-primary);
+  border-radius: 5px;
+  color: var(--text-primary);
+  margin-right: 10px;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  box-shadow: 0 0 5px var(--accent-primary);
+}
+
+button#send {
+  background: var(--accent-primary);
+  color: var(--text-primary);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  animation: pulse 2s infinite;
+}
+
+button#send:hover {
+  background: var(--accent-secondary);
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 5px var(--accent-primary); }
+  50% { box-shadow: 0 0 15px var(--accent-primary); }
+  100% { box-shadow: 0 0 5px var(--accent-primary); }
+}
+
+/* Link styling */
+a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  display: block;
+  margin-top: 20px;
+}
+
+a:hover {
+  color: var(--accent-secondary);
+  text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  #messages {
+    height: 300px;
+    padding: 10px;
+  }
+
+  input[type="text"] {
+    width: 60%;
+    margin-right: 5px;
+  }
+
+  button#send {
+    padding: 8px 15px;
+  }
+}

@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 from flask_socketio import SocketIO, join_room, leave_room, send
 import time
-
+import pandas as pd
 
 load_dotenv()
 # Pyrebase configuration (replace with your Firebase project details)
@@ -46,6 +46,8 @@ def home():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
+        if "user" in session:
+            session.pop("user", None)
         email = request.form["email"]
         password = request.form["password"]
         try:
@@ -415,6 +417,76 @@ def clubs(club_id):
     return render_template(club_id + ".html")
 
 
+def showmenu(file_path):
+    df = pd.read_excel(file_path, header=None)
+
+    days = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    ]
+
+    organized_menu = {
+        day: {"Breakfast": [], "Lunch": [], "Snacks": [], "Dinner": []} for day in days
+    }
+
+    current_meal = None
+
+    for _, row in df.iterrows():
+        first_cell = str(row[0]).strip().upper() if pd.notna(row[0]) else ""
+
+        if first_cell in ["BREAKFAST", "LUNCH", "SNACKS", "DINNER"]:
+            current_meal = first_cell.capitalize()
+            continue
+
+        if first_cell.isdigit() or not first_cell or pd.isna(row[0]):
+            continue
+
+        if current_meal:
+            for i, item in enumerate(row):
+                if pd.notna(item) and str(item).strip():
+                    organized_menu[days[i]][current_meal].append(str(item).strip())
+
+    for day in organized_menu:
+        for meal in list(organized_menu[day]):
+            if not organized_menu[day][meal]:
+                del organized_menu[day][meal]
+            else:
+                seen = set()
+                organized_menu[day][meal] = [
+                    item.title()
+                    for item in organized_menu[day][meal]
+                    if not (item.lower() in seen or seen.add(item.lower()))
+                ]
+
+    return organized_menu
+
+
+# Menu
+@app.route("/menu")
+def menu():
+    file_path = rf"static\assets\menu.xlsx"
+
+    menu_data = showmenu(file_path)
+    return render_template(
+        "menu.html",
+        menu=menu_data,
+        days=[
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+        ],
+    )
+
+
 # Lost and Found
 @app.route("/lost_and_found")
 def lost_and_found():
@@ -471,12 +543,6 @@ def create_lost_item():
     # Store item in Firestore
     db.collection("lost_and_found").add(item_data)
     return redirect(url_for("lost_and_found"))
-
-
-# Menu
-@app.route("/menu")
-def menu():
-    return render_template("menu.html")
 
 
 # Logout

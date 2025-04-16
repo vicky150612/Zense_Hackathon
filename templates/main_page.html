@@ -1,22 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
+    <link rel="stylesheet" href="/static/Styles/main_page.css">
 </head>
 
 <body>
-    <h1>Main Page</h1>
-    <p>Welcome, User!</p>
-    <a href="/posts">Posts</a><br>
-    <a href="/ride_share">Ride Share</a><br>
-    <a href="/messaging/{{ user_id }}">Messaging</a><br>
-    <a href="/menu">Menu</a><br>
-    <a href="/profile">Profile</a><br>
-    <a href="/club">Visit Clubs Page</a><br>
-    <a href="/lost_and_found">Lost and Found</a><br>
-    <a href="/">Home</a><br>
-    <a href="/logout">Logout</a><br>
+    <header>
+        <h1>Welcome, User!</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="/posts">Posts</a></li>
+            <li><a href="/ride_share">Ride Share</a></li>
+            <li><a href="/messaging/{{ user_id }}">Messaging</a></li>
+            <li><a href="/menu">Menu</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/club">Visit Clubs Page</a></li>
+            <li><a href="/lost_and_found">Lost and Found</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
 </body>
 
 </html>
