@@ -4,6 +4,7 @@ from google.cloud import firestore
 import os
 from dotenv import load_dotenv
 from flask_socketio import SocketIO, join_room, leave_room, send
+import time
 
 
 load_dotenv()
@@ -47,7 +48,6 @@ def signup():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
-        username = request.form["username"]
         try:
             # Create user with Pyrebase
             user = auth.create_user_with_email_and_password(email, password)
@@ -58,7 +58,7 @@ def signup():
             auth.send_email_verification(id_token)
             # Store user data in Firestore
             db.collection("users").document(uid).set(
-                {"username": username, "email": email, "bio": ""}
+                {"username": "", "email": email, "bio": ""}
             )
             return "Signup successful! Please check your email to verify."
         except Exception as e:
@@ -89,14 +89,34 @@ def login():
                 return "Please verify your email before logging in."
             # Get UID from the response
             uid = user["localId"]
+            # if username == "" return uname.html
+            user_ref = db.collection("users").document(uid)
+            user_data = user_ref.get().to_dict()
             session["user"] = uid  # Store UID in session
-            return redirect(url_for("main_page", user_id=uid))
+            if user_data["username"] == "":
+                return render_template("uname.html", user_id=uid, email=email)
+            else:
+                return redirect(url_for("main_page", user_id=uid))
         except Exception as e:
             return f"Error: {str(e)}"
     # If GET request, render the login page
     if "user" in session:
         return redirect(url_for("main_page", user_id=session["user"]))
     return render_template("login.html")
+
+
+# Set Username
+@app.route("/username", methods=["POST"])
+def set_username():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user"]
+    username = request.form["username"]
+    # Update username in Firestore
+    user_ref = db.collection("users").document(user_id)
+    user_ref.update({"username": username})
+    # Redirect to main page after setting username
+    return redirect(url_for("main_page", user_id=user_id))
 
 
 # Main Page (Hub after login)
@@ -133,15 +153,30 @@ def create_post():
     user_id = session["user"]
     title = request.form["title"]
     content = request.form["content"]
-    photo = request.files["profile_picture"]
-    # Save the photo to uploads folder with name = user_id
-    upload_folder = "uploads"
-    if not os.path.exists(upload_folder):
-        os.makedirs(upload_folder)
-    photo_path = os.path.join(upload_folder, f"{user_id}.jpg")
-    photo.save(photo_path)
+
+    # Initialize post data
+    post_data = {"title": title, "content": content, "user_id": user_id}
+
+    # Handle profile picture upload
+    if "picture" in request.files:
+        picture = request.files["picture"]
+        if picture and picture.filename:
+            # Create upload directory if it doesn't exist
+            upload_folder = os.path.join("static", "uploads", "posts")
+            if not os.path.exists(upload_folder):
+                os.makedirs(upload_folder)
+
+            # Generate unique filename
+            file_ext = os.path.splitext(picture.filename)[1].lower()
+            filename = f"post_{user_id}_{int(time.time())}{file_ext}"
+            photo_path = os.path.join(upload_folder, filename)
+            picture.save(photo_path)
+
+            # Store the path relative to static folder for template rendering
+            post_data["image_url"] = f"uploads/posts/{filename}"
+
     # Store post in Firestore
-    db.collection("posts").add({"title": title, "content": content, "user_id": user_id})
+    db.collection("posts").add(post_data)
     return redirect(url_for("posts"))
 
 
@@ -167,6 +202,17 @@ def view_post(post_id):
 # Delete Post
 @app.route("/delete_post", methods=["POST"])
 def delete_post():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user"]
+    # Check if the user is authorized to delete the post
+    post_ref = db.collection("posts").document(request.form["id"])
+    post = post_ref.get()
+    if not post.exists:
+        return "Post not found."
+    post_data = post.to_dict()
+    if post_data["user_id"] != user_id:
+        return "You are not authorized to delete this post."
     post_id = request.form["id"]
     # Delete post from Firestore
     db.collection("posts").document(post_id).delete()
@@ -292,8 +338,6 @@ def profile():
 
 
 # Edit Profile
-
-
 @app.route("/edit_profile", methods=["POST"])
 def edit_profile():
     if "user" not in session:
@@ -304,7 +348,7 @@ def edit_profile():
     bio = request.form.get("bio", "")
 
     # Handle profile picture upload
-    upload_folder = os.path.join("static", "uploads")
+    upload_folder = os.path.join("static", "uploads/profiles")
 
     # Make sure the uploads directory exists
     if not os.path.exists(upload_folder):
@@ -331,11 +375,10 @@ def edit_profile():
                 print(f"Saved image to: {photo_path}")
 
                 # Store the path relative to static folder
-                updates["profile_picture"] = f"uploads/{filename}"
+                updates["profile_picture"] = f"uploads/profiles/{filename}"
             except Exception as e:
                 print(f"Error saving file: {e}")
                 return f"Error saving profile picture: {e}"
-
     # Update user data in Firestore
     try:
         user_ref = db.collection("users").document(user_id)
@@ -395,18 +438,37 @@ def create_lost_item():
     if "user" not in session:
         return redirect(url_for("login"))
     user_id = session["user"]
-    photo_url = request.form["photo"]
     place_found = request.form["place_found"]
     collect = request.form["collect"]
     contact = request.form["contact"]
-    # Store item in Firestore
+
+    # Initialize item data
     item_data = {
-        "photo_url": photo_url,
         "place_found": place_found,
         "collect": collect,
         "contact": contact,
         "user_id": user_id,
     }
+
+    # Handle item photo upload
+    if "item_photo" in request.files:
+        item_photo = request.files["item_photo"]
+        if item_photo and item_photo.filename:
+            # Create upload directory if it doesn't exist
+            upload_folder = os.path.join("static", "uploads", "items")
+            if not os.path.exists(upload_folder):
+                os.makedirs(upload_folder)
+
+            # Generate unique filename
+            file_ext = os.path.splitext(item_photo.filename)[1].lower()
+            filename = f"item_{user_id}_{int(time.time())}{file_ext}"
+            photo_path = os.path.join(upload_folder, filename)
+            item_photo.save(photo_path)
+
+            # Store the path relative to static folder for template rendering
+            item_data["image_url"] = f"uploads/items/{filename}"
+
+    # Store item in Firestore
     db.collection("lost_and_found").add(item_data)
     return redirect(url_for("lost_and_found"))
 

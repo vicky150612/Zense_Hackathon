@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Username Animation</title>
+    <style>
+        body {
+            background: #111;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: sans-serif;
+            color: #fff;
+        }
+
+        .scene {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .text-container {
+            position: relative;
+            font-size: 60px;
+            color: #fefefe;
+            height: 100px;
+            z-index: 10;
+        }
+
+        .half {
+            position: absolute;
+            top: 0;
+            transition: transform 0.6s ease, opacity 0.6s ease;
+        }
+
+        .left {
+            left: 0;
+        }
+
+        :hover .left {
+            cursor: pointer;
+        }
+
+        .right {
+            right: 0;
+        }
+
+        .right:hover {
+            cursor: pointer;
+        }
+
+
+        .dot {
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            transition: opacity 0.3s ease;
+        }
+
+        .ground {
+            width: 100%;
+            height: 20px;
+            background: transparent;
+            position: absolute;
+            bottom: 60px;
+        }
+
+        /* Split stage */
+        .split .dot {
+            opacity: 0;
+        }
+
+        .split .left {
+            transform: rotate(20deg) translateX(200px);
+            opacity: 0.9;
+        }
+
+        .split .right {
+            transform: rotate(-20deg) translateX(-200px);
+            opacity: 0.9;
+        }
+
+        /* Fall stage */
+        .fall .left {
+            transform: translate(240px, 240px);
+            opacity: 1;
+        }
+
+        .fall .right {
+            transform: translate(-240px, 240px);
+            opacity: 1;
+        }
+
+        .fall .dot {
+            display: none;
+        }
+
+        .message {
+            margin-top: 40px;
+            font-size: 32px;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .message.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scene">
+        <div class="text-container" id="text"></div>
+        <div class="message" id="message">Choose your username</div>
+        <div class="ground"></div>
+    </div>
+
+    <script>
+        let email = "{{ email }}";
+        email = email.split('@')[0];
+        const [a, b] = email.split('.');
+
+        const container = document.getElementById('text');
+        const leftSpan = document.createElement('span');
+        leftSpan.className = 'half right';
+        leftSpan.textContent = a;
+
+        const dotSpan = document.createElement('span');
+        dotSpan.className = 'half dot';
+        dotSpan.textContent = '        ';
+
+        const rightSpan = document.createElement('span');
+        rightSpan.className = 'half left';
+        rightSpan.textContent = b;
+
+        container.append(leftSpan, dotSpan, rightSpan);
+
+        // Auto play animation after 1s
+        setTimeout(() => {
+            container.classList.add('split');
+
+            setTimeout(() => {
+                leftSpan.style.transition = 'transform 0.5s ease-in';
+                rightSpan.style.transition = 'transform 0.5s ease-in';
+                container.classList.remove('split');
+                container.classList.add('fall');
+
+                // Show message after fall
+                setTimeout(() => {
+                    document.getElementById('message').classList.add('show');
+                }, 600); // after fall animation
+            }, 700); // delay before fall
+        }, 1000); // 1s initial delay
+        leftSpan.addEventListener('click', () => {
+            document.getElementById('username').value = leftSpan.textContent;
+            document.querySelector('button').click();
+        });
+        rightSpan.addEventListener('click', () => {
+            document.getElementById('username').value = rightSpan.textContent;
+            document.querySelector('button').click();
+        });
+    </script>
+    <form action="/username" method="post">
+        <input id="username" type="text" name="username" placeholder="Enter your username" hidden />
+        <button type="submit" hidden>Submit</button>
+    </form>
+</body>
+
+</html>
