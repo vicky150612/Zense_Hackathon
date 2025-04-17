@@ -1,0 +1,106 @@
+/* Import modern sans-serif font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Define global variables for theme consistency */
+:root {
+  --bg-primary: #1A1A1A;
+  --bg-secondary: #1E2A44;
+  --accent-primary: #00BFFF;
+  --accent-secondary: #00FF99;
+  --text-primary: #FFFFFF;
+  --text-secondary: #B0B0B0;
+}
+
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 20px;
+  line-height: 1.6;
+}
+
+/* Post container styling */
+.post-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-primary);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Header styling */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 5px var(--accent-primary);
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* Paragraph styling */
+p {
+  color: var(--text-secondary);
+  margin-bottom: 15px;
+  padding: 5px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+}
+
+/* Image styling */
+.post-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  box-shadow: 0 0 10px var(--accent-primary);
+  margin-bottom: 20px;
+}
+
+/* Button styling */
+.delete-button, .back-button {
+  background: var(--accent-primary);
+  color: var(--text-primary);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  animation: pulse 2s infinite;
+  margin: 10px 0;
+  display: inline-block;
+}
+
+.delete-button:hover, .back-button:hover {
+  background: var(--accent-secondary);
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 5px var(--accent-primary); }
+  50% { box-shadow: 0 0 15px var(--accent-primary); }
+  100% { box-shadow: 0 0 5px var(--accent-primary); }
+}
+
+/* Link styling */
+.back-button {
+  text-decoration: none;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .post-container {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+}
