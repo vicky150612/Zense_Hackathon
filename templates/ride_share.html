@@ -6,22 +6,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/Styles/ride_share.css">
     <title>Ride Share</title>
+    <style>
+        /* Basic modal and filter styling (adjust or move to CSS file) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 16px;
+            top: 12px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        #filter-controls {
+            margin: 10px 0;
+        }
+
+        #filter-controls select,
+        #filter-controls button {
+            margin-right: 10px;
+        }
+
+        ul#rideList li {
+            cursor: pointer;
+            padding: 8px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        ul#rideList li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Ride Share</h1>
-    <button onclick="showRideModal()">Post a Ride</button><br>
+    <button onclick="showRideModal()">Post a Ride</button>
+
+    <!-- Filter controls -->
+    <div id="filter-controls">
+        <label>From:
+            <select id="filterFrom">
+                <option value="">All</option>
+                <option value="New York">New York</option>
+                <option value="Los Angeles">Los Angeles</option>
+                <option value="Chicago">Chicago</option>
+                <option value="Houston">Houston</option>
+            </select>
+        </label>
+        <label>To:
+            <select id="filterTo">
+                <option value="">All</option>
+                <option value="New York">New York</option>
+                <option value="Los Angeles">Los Angeles</option>
+                <option value="Chicago">Chicago</option>
+                <option value="Houston">Houston</option>
+            </select>
+        </label>
+        <button onclick="applyFilter()">Filter</button>
+    </div>
 
     <!-- Modal for creating a new ride -->
-    <div id="createRideModal">
+    <div id="createRideModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="hideRideModal()">×</span>
+            <span class="close" onclick="hideRideModal()">&times;</span>
             <h2>Create Ride</h2>
             <form method="POST" action="/create_ride">
                 <label for="from">From:</label>
-                <input type="text" id="from" name="from" required><br>
+                <select id="from" name="from" required>
+                    <option value="New York">New York</option>
+                    <option value="Los Angeles">Los Angeles</option>
+                    <option value="Chicago">Chicago</option>
+                    <option value="Houston">Houston</option>
+                </select><br>
                 <label for="to">To:</label>
-                <input type="text" id="to" name="to" required><br>
+                <select id="to" name="to" required>
+                    <option value="New York">New York</option>
+                    <option value="Los Angeles">Los Angeles</option>
+                    <option value="Chicago">Chicago</option>
+                    <option value="Houston">Houston</option>
+                </select><br>
                 <label for="date">Date:</label>
                 <input type="date" id="date" name="date" required><br>
                 <label for="time">Time:</label>
@@ -33,9 +117,25 @@
         </div>
     </div>
 
-    <ul>
+    <!-- Modal for showing ride info -->
+    <div id="rideInfoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideInfoModal()">&times;</span>
+            <h2>Ride Details</h2>
+            <p><strong>From:</strong> <span id="infoFrom"></span></p>
+            <p><strong>To:</strong> <span id="infoTo"></span></p>
+            <p><strong>Date:</strong> <span id="infoDate"></span></p>
+            <p><strong>Time:</strong> <span id="infoTime"></span></p>
+            <p><strong>Contact:</strong> <span id="infoContact"></span></p>
+        </div>
+    </div>
+
+    <!-- Ride list -->
+    <ul id="rideList">
         {% for ride in rides %}
-        <li>From: {{ ride.from }} To: {{ ride.to }} on {{ ride.date }} at {{ ride.time }}
+        <li data-from="{{ ride.from }}" data-to="{{ ride.to }}" data-date="{{ ride.date }}" data-time="{{ ride.time }}"
+            data-contact="{{ ride.contact }}">
+            From: {{ ride.from }} To: {{ ride.to }} on {{ ride.date }} at {{ ride.time }}
             {% if ride.user_id == user_id %}
             <a href="/delete_ride/{{ ride.id }}">Delete</a>
             {% endif %}
@@ -44,23 +144,55 @@
     </ul>
 
     <a href="/main_page">Back to Main Page</a>
-    <!-- JavaScript to control modal visibility -->
+
     <script>
+        // Show/hide create modal
         function showRideModal() {
             document.getElementById('createRideModal').style.display = 'block';
         }
         function hideRideModal() {
             document.getElementById('createRideModal').style.display = 'none';
         }
-        document.getElementById('createRideModal').addEventListener('click', function (event) {
-            if (event.target == this) {
-                hideRideModal();
-            }
+        // Show/hide info modal
+        function showInfoModal() {
+            document.getElementById('rideInfoModal').style.display = 'block';
+        }
+        function hideInfoModal() {
+            document.getElementById('rideInfoModal').style.display = 'none';
+        }
+        // Close modals on outside click
+        window.addEventListener('click', function (event) {
+            const createModal = document.getElementById('createRideModal');
+            const infoModal = document.getElementById('rideInfoModal');
+            if (event.target === createModal) hideRideModal();
+            if (event.target === infoModal) hideInfoModal();
         });
+        // Attach click event to each ride item
+        document.addEventListener('DOMContentLoaded', function () {
+            const items = document.querySelectorAll('#rideList li');
+            items.forEach(item => {
+                item.addEventListener('click', function () {
+                    document.getElementById('infoFrom').innerText = this.dataset.from;
+                    document.getElementById('infoTo').innerText = this.dataset.to;
+                    document.getElementById('infoDate').innerText = this.dataset.date;
+                    document.getElementById('infoTime').innerText = this.dataset.time;
+                    document.getElementById('infoContact').innerText = this.dataset.contact;
+                    showInfoModal();
+                });
+            });
+        });
+        // Filtering function
+        function applyFilter() {
+            const fromVal = document.getElementById('filterFrom').value;
+            const toVal = document.getElementById('filterTo').value;
+            const items = document.querySelectorAll('#rideList li');
+            items.forEach(item => {
+                const matchesFrom = !fromVal || item.dataset.from === fromVal;
+                const matchesTo = !toVal || item.dataset.to === toVal;
+                item.style.display = (matchesFrom && matchesTo) ? '' : 'none';
+            });
+        }
     </script>
-
-    <!-- Original Cloudflare script from ride_share.html -->
-    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'92f94a56cd91bfc2',t:'MTc0NDUyOTc2NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
 </body>
 
 </html>

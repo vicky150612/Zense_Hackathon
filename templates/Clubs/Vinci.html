@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vinci</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      background: #111;
+      margin: 40px 20px;
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(59, 130, 246, 0.08);
+      display: flex;
+      gap: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Moving blue light effect */
+    .container::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent, #3b82f6, transparent 60%);
+      animation: rotateLight 4s linear infinite;
+      z-index: 0;
+      filter: blur(60px);
+      opacity: 0.3;
+    }
+
+    .container>* {
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes rotateLight {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .sidebar {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .sidebar img {
+      width: 170px;
+      height: 170px;
+      object-fit: cover;
+      border-radius: 12px;
+      transition: transform 0.3s;
+      box-shadow: 0 2px 12px rgba(59, 130, 246, 0.12);
+    }
+
+    .sidebar img:hover {
+      transform: rotate(-5deg) scale(1.04);
+    }
+
+    .contact-info {
+      width: 100%;
+      padding: 18px 20px;
+      margin-top: 10px;
+      margin-left: 90px;
+    }
+
+    .contact-info p {
+      color: #e0e7ef;
+      margin: 10px 0;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .contact-info a {
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .contact-info a:hover {
+      color: #60a5fa;
+      text-decoration: underline;
+    }
+
+    .main-content {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    h2 {
+      color: #3b82f6;
+      font-size: 2rem;
+      border-bottom: 2px solid #3b82f6;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    .about-text {
+      color: #f1f5f9;
+      line-height: 1.7;
+      font-size: 1.13rem;
+      margin-bottom: 22px;
+      text-align: justify;
+    }
+
+    .gallery {
+      margin-top: 25px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .gallery img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 7px;
+      border: 1.5px solid #3b82f6;
+      background: #222;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        flex-direction: column;
+        padding: 25px 10px;
+      }
+
+      .sidebar {
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+      }
+
+      .main-content {
+        margin-top: 20px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 10px 2px;
+      }
+
+      .sidebar img {
+        width: 110px;
+        height: 110px;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      .about-text {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <img src="/static/assets/vinci_logo.jpg" alt="Vinci Logo"
+        style="border-radius:50%; width:150px; height:150px; object-fit:cover;">
+      <div class="contact-info">
+        <p>📧 <a href="mailto:art.club@iiitb.ac.in">vinci@iiitb.ac.in</a></p>
+        <p>📸 <a href="https://instagram.com/vinci_iiitb" target="_blank">@vinci_iiitb</a></p>
+        <p>🌐 <a href="https://www.iiitb.ac.in/committees-clubs/clubs/art-club" target="_blank">vinci.iiitb.net</a></p>
+      </div>
+    </aside>
+    <main class="main-content">
+      <section class="about">
+        <h2>About Us</h2>
+        <div class="about-text">
+          Art is the ultimate expression of human
+          emotion and perception, a vibrant
+          kaleidoscope of creativity waiting to be
+          explored. Join us for exhilarating Art
+          competitions, immersive workshops led
+          by renowned artists, and vibrant art
+          sessions where everyone can unleash
+          their inner Picasso.<br><br>
+          From rock painting to t-shirt
+          masterpieces, sketching to
+          cutting-edge digital art, our art
+          carnival is a dazzling showcase of
+          diverse talent and boundless
+          imagination. Whether you're a
+          seasoned artist or a novice,
+          there's a place for you to learn,
+          create, and revel in the joy of
+          artistic expression.
+        </div>
+        <!-- <div class="gallery">
+          <img src="event1.jpg" alt="88it Event 1">
+          <img src="magazine_cover.jpg" alt="88it Magazine Cover">
+          <img src="event2.jpg" alt="88it Event 2">
+        </div> -->
+      </section>
+    </main>
+  </div>
+</body>
+
+</html>

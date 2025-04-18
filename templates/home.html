@@ -1,22 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IIITB i-Home</title>
     <link rel="stylesheet" href="/static/Styles/home.css">
-    <title>Home - iiitb i-Home</title>
 </head>
 
 <body>
-    <h1>Welcome to IIITB i-Home</h1>
-    <p>Info about college: International Institute of Information Technology, Bangalore is a premier technical
-        institute.</p>
-    <a href="/signup">Signup</a> | <a href="/login">Login</a><br>
+    <nav>
+        <button id="sign_up" aria-label="Sign up" onclick="signup()">Sign Up</button>
+        <button aria-label="Log in" onclick="login()">Log In</button>
+    </nav>
+    <header>
+        <!-- <h1 id="i">IIIT-</h1>
+        <h1 id="b">B</h1>
+        <h1 id="l">lare</h1> -->
+        <h1>IIIT-Blare</h1>
+        <img src="/static/assets/main_logo.jpg" alt="IIITB Logo" class="logo">
+    </header>
 
-    <h2>Fests</h2>
-    <a href="https://infin8.iiitb.net/">infin8</a>
-    <a href="https://synergy.iiitb.ac.in/">synergy</a>
-    <a href="https://www.iiitb.ac.in/events-and-festivals/events/spandan">spandan</a>
+    <main>
+        <p>
+            <strong>International Institute of Information Technology, Bangalore</strong> is a premier technical
+            institute offering cutting-edge education and research.
+        </p>
 
+        <section aria-labelledby="fests-heading">
+            <h2 id="fests-heading">Fests</h2>
+            <div class="fests">
+                <div class="fest-card" id="infin8">
+                    <a href="https://infin8.iiitb.ac.in/" target="_blank" rel="noopener">Infin8</a>
+                    <img src="/static/assets/infin8_logo.png" alt="Infin8 fest logo">
+                    <p class="sutti">Infin8 is an inter-college techno-cultural
+                        festival conducted by IIIT-Bangalore every
+                        year.The students of our college participate with
+                        enthusiasm and compete with the other college
+                        teams for the podium finish.</p>
+                </div>
+                <div class="fest-card" id="synergy">
+                    <a href="https://synergy.iiitb.ac.in/" target="_blank" rel="noopener">Synergy</a>
+                    <img src="/static/assets/synergy_logo.png" alt="Synergy fest logo">
+                    <p class="sutti">Synergy, the tech fest of IIIT-
+                        Bangalore, ignites minds with
+                        innovation and collaboration.
+                        Synergy
+                        fosters a dynamic ecosystem where
+                        ideas converge, propelling the future
+                        of technology forward.</p>
+                </div>
+                <div class="fest-card" id="spandan">
+                    <a href="https://www.iiitb.ac.in/events-and-festivals/events/spandan" target="_blank"
+                        rel="noopener">Spandan</a>
+                    <img src="/static/assets/spandan_logo111.png" alt="Spandan fest logo">
+                    <p class="sutti">Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus quam, cumque
+                        autem sequi
+                        maiores facere soluta modi sit qui asperiores? Beatae quae deleniti culpa numquam praesentium
+                        dolorem magni aspernatur voluptatem?</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        function signup() {
+            window.location.href = "/signup";
+        }
+        function login() {
+            window.location.href = "/login";
+        }
+    </script>
 </body>
 
 </html>

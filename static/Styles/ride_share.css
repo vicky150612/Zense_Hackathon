@@ -1,3 +1,5 @@
+/* ride_share.css */
+
 /* Import modern sans-serif font */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
@@ -58,43 +60,80 @@ button:hover {
   100% { box-shadow: 0 0 5px var(--accent-primary); }
 }
 
+/* Filter controls */
+#filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  max-width: 800px;
+}
+
+#filter-controls label {
+  display: flex;
+  align-items: center;
+  color: var(--text-primary);
+  margin: 5px 10px;
+  font-size: 1rem;
+}
+
+#filter-controls select {
+  padding: 8px 12px;
+  margin-left: 5px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-primary);
+  border-radius: 5px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+#filter-controls select:focus {
+  outline: none;
+  box-shadow: 0 0 5px var(--accent-primary);
+}
+
 /* Ride list styling */
-ul {
+ul#rideList {
   list-style: none;
   max-width: 800px;
   margin: 0 auto;
 }
 
-li {
+ul#rideList li {
   background: var(--bg-secondary);
   border: 1px solid var(--accent-primary);
   border-radius: 10px;
   padding: 15px;
   margin-bottom: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, background 0.3s ease;
+  cursor: pointer;
 }
 
-li:hover {
+ul#rideList li:hover {
   transform: scale(1.02);
+  background: #2A3560;
 }
 
-a {
+li a {
   color: var(--accent-primary);
   text-decoration: none;
   margin-left: 10px;
   transition: color 0.3s ease;
 }
 
-a:hover {
+li a:hover {
   color: var(--accent-secondary);
   text-decoration: underline;
 }
 
-/* Link styling for back button */
+/* Back link styling */
 a[href="/main_page"] {
   display: block;
-  margin-top: 20px;
+  margin: 20px auto;
+  text-align: center;
   color: var(--accent-primary);
   transition: color 0.3s ease;
 }
@@ -104,8 +143,28 @@ a[href="/main_page"]:hover {
   text-decoration: underline;
 }
 
-/* Modal styling */
-#createRideModal {
+/* Unified input & select styling */
+input[type="text"],
+input[type="date"],
+input[type="time"],
+select {
+  padding: 10px;
+  background: var(--bg-primary);
+  border: 1px solid var(--accent-primary);
+  border-radius: 5px;
+  color: var(--text-primary);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 5px var(--accent-primary);
+}
+
+/* Modal overlay */
+.modal {
   display: none;
   position: fixed;
   z-index: 1000;
@@ -116,8 +175,10 @@ a[href="/main_page"]:hover {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
+/* Modal content */
 .modal-content {
   background: var(--bg-secondary);
+  color: var(--text-primary);
   margin: 10% auto;
   padding: 20px;
   border: 1px solid var(--accent-primary);
@@ -128,9 +189,28 @@ a[href="/main_page"]:hover {
   position: relative;
 }
 
+/* Ensure all text inside modals is visible */
+.modal-content h2,
+.modal-content p,
+.modal-content label,
+.modal-content span,
+.modal-content input,
+.modal-content select,
+.modal-content button {
+  color: var(--text-primary);
+}
+
+.modal-content ::placeholder {
+  color: var(--text-secondary);
+  opacity: 1;
+}
+
+/* Close button */
 .close {
   color: var(--text-secondary);
-  float: right;
+  position: absolute;
+  right: 16px;
+  top: 12px;
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
@@ -143,6 +223,7 @@ a[href="/main_page"]:hover {
   text-decoration: none;
 }
 
+/* Form layout */
 form {
   display: flex;
   flex-direction: column;
@@ -154,40 +235,24 @@ label {
   margin-top: 10px;
 }
 
-input[type="text"],
-input[type="date"],
-input[type="time"] {
-  padding: 10px;
-  background: var(--bg-primary);
-  border: 1px solid var(--accent-primary);
-  border-radius: 5px;
-  color: var(--text-primary);
-}
-
-input[type="text"]:focus,
-input[type="date"]:focus,
-input[type="time"]:focus {
-  outline: none;
-  box-shadow: 0 0 5px var(--accent-primary);
-}
-
 button[type="submit"] {
   align-self: center;
   margin-top: 20px;
 }
 
-/* Responsive design */
+/* Responsive adjustments */
 @media (max-width: 600px) {
   h1 {
     font-size: 2rem;
   }
-
-  li {
+  ul#rideList li {
     padding: 10px;
   }
-
   .modal-content {
     margin: 5% auto;
     width: 95%;
+  }
+  #filter-controls {
+    flex-direction: column;
   }
 }

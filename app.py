@@ -50,6 +50,7 @@ def signup():
             session.pop("user", None)
         email = request.form["email"]
         password = request.form["password"]
+        error = ""
         try:
             # Create user with Pyrebase
             user = auth.create_user_with_email_and_password(email, password)
@@ -64,13 +65,24 @@ def signup():
             )
             return "Signup successful! Please check your email to verify."
         except Exception as e:
-            return f"Error: {str(e)}"
+            if "INVALID_EMAIL" in str(e):
+                error = "Invalid email format. Please enter a valid email."
+            elif "WEAK_PASSWORD" in str(e):
+                error = "Weak password. Please enter a stronger password."
+            elif "EMAIL_NOT_FOUND" in str(e):
+                error = "Email not found. Please sign up."
+            elif "TOO_MANY_ATTEMPTS_TRY_LATER" in str(e):
+                error = "Too many attempts. Please try again later."
+            elif "EMAIL_EXISTS" in str(e):
+                error = "Email already exists. Please log in."
+            return render_template("signup.html", error=error)
     return render_template("signup.html")
 
 
 # Login Route
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    error = ""
     if request.method == "POST":
         # Check if user is already logged in
         if "user" in session:
@@ -88,7 +100,8 @@ def login():
             # Extract email verification status (nested in 'users' list)
             email_verified = account_info["users"][0]["emailVerified"]
             if not email_verified:
-                return "Please verify your email before logging in."
+                error = "Email not verified. Please check your inbox."
+                return render_template("login.html", error=error)
             # Get UID from the response
             uid = user["localId"]
             # if username == "" return uname.html
@@ -100,11 +113,24 @@ def login():
             else:
                 return redirect(url_for("main_page", user_id=uid))
         except Exception as e:
-            return f"Error: {str(e)}"
+            if "EMAIL_NOT_FOUND" in str(e):
+                error = "Email not found. Please sign up."
+            elif "USER_NOT_FOUND" in str(e):
+                error = "User not found. Please sign up."
+            elif "INVALID_PASSWORD" in str(e):
+                error = "Invalid password. Please enter the correct password."
+            elif "USER_DISABLED" in str(e):
+                error = "User account is disabled. Please contact support."
+            elif "TOO_MANY_ATTEMPTS_TRY_LATER" in str(e):
+                error = "Too many attempts. Please try again later."
+            elif "INVALID_EMAIL" in str(e):
+                error = "Invalid email format. Please enter a valid email."
+            elif "INVALID_LOGIN_CREDENTIALS" in str(e):
+                error = "Invalid credentials. Please check your email and password."
     # If GET request, render the login page
     if "user" in session:
         return redirect(url_for("main_page", user_id=session["user"]))
-    return render_template("login.html")
+    return render_template("login.html", error=error)
 
 
 # Set Username
@@ -412,12 +438,43 @@ def club():
     return render_template("club.html")
 
 
-@app.route("/club/<club_id>")
-def clubs(club_id):
-    return render_template(club_id + ".html")
+# Clubs
+@app.route("/8bit")
+def club_8bit():
+    return render_template("/clubs/8bit.html")
 
 
-def showmenu(file_path):
+@app.route("/e-cell")
+def club_ecell():
+    return render_template("/clubs/E-Cell.html")
+
+
+@app.route("/impulse")
+def club_impulse():
+    return render_template("/clubs/Impulse.html")
+
+
+@app.route("/parvaaz")
+def club_parvaaz():
+    return render_template("/clubs/Parvaaz.html")
+
+
+@app.route("/symphony")
+def club_symphony():
+    return render_template("/clubs/Symphony.html")
+
+
+@app.route("/vinci")
+def club_vinci():
+    return render_template("/clubs/Vinci.html")
+
+
+@app.route("/zense")
+def club_zense():
+    return render_template("/clubs/Zense.html")
+
+
+def menu(file_path):
     df = pd.read_excel(file_path, header=None)
 
     days = [
@@ -466,13 +523,11 @@ def showmenu(file_path):
     return organized_menu
 
 
-# Menu
-@app.route("/menu")
-def menu():
-    file_path = rf"static\assets\menu.xlsx"
-
-    menu_data = showmenu(file_path)
-    return render_template(
+@app.route("/generate_menu")
+def generate_menu():
+    file_path = r"static\assets\menu.xlsx"
+    menu_data = menu(file_path)
+    html = render_template(
         "menu.html",
         menu=menu_data,
         days=[
@@ -485,6 +540,17 @@ def menu():
             "Sunday",
         ],
     )
+    with open(r"templates\current_menu.html", "w") as f:
+        f.write(html)
+    return "Menu HTML generated successfully"
+
+
+@app.route("/menu")
+def menu_page():
+    try:
+        return render_template("current_menu.html")
+    except Exception as e:
+        return "Menu not yet updated."
 
 
 # Lost and Found

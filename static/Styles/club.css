@@ -1,0 +1,93 @@
+body {
+margin: 0;
+padding: 0;
+background: #000000;
+font-family: 'Segoe UI', Arial, sans-serif;
+color: #eaeaea;
+}
+
+.container {
+max-width: 1200px;
+margin: 60px auto;
+padding: 0 24px;
+}
+
+h1 {
+font-size: 2.8em;
+text-align: center;
+color: #4da3ff;
+margin-bottom: 8px;
+}
+
+.underline {
+width: 100px;
+border: none;
+border-top: 3px solid #4da3ff;
+margin: 0 auto 40px auto;
+}
+
+.description {
+text-align: center;
+font-size: 1.1em;
+line-height: 1.8;
+max-width: 800px;
+margin: 0 auto 50px auto;
+color: #dddddd;
+}
+
+.grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+gap: 24px;
+}
+
+.card {
+background: rgba(255, 255, 255, 0.05);
+backdrop-filter: blur(14px);
+border-radius: 16px;
+padding: 28px 24px;
+border: 1px solid rgba(255, 255, 255, 0.1);
+box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+transform: translateY(-6px);
+border-color: #4da3ff;
+box-shadow: 0 12px 32px rgba(77, 163, 255, 0.3);
+}
+
+.icon {
+font-size: 2em;
+color: #4da3ff;
+margin-bottom: 12px;
+}
+
+.club-name {
+font-size: 1.25em;
+font-weight: 600;
+color: #ffffff;
+text-decoration: none;
+display: inline-block;
+margin-bottom: 8px;
+}
+
+.club-name:hover {
+color: #a2d2ff;
+}
+
+.club-desc {
+font-size: 0.95em;
+color: #cccccc;
+line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+.description {
+    font-size: 1em;
+}
+
+h1 {
+    font-size: 2.2em;
+}
+}

@@ -4,27 +4,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
+    <meta name="description" content="IIIT Bangalore Hub - Connect with students, share rides, and more">
+    <title>IIITB Hub</title>
     <link rel="stylesheet" href="/static/Styles/main_page.css">
+    <link rel="icon" href="/static/Images/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
     <header>
-        <h1>Welcome, User!</h1>
+        <h1>Welcome!</h1>
+        <p class="tagline">Your gateway to the IIIT Bangalore community</p>
     </header>
-    <nav>
-        <ul>
-            <li><a href="/posts">Posts</a></li>
-            <li><a href="/ride_share">Ride Share</a></li>
-            <li><a href="/messaging/{{ user_id }}">Messaging</a></li>
-            <li><a href="/menu">Menu</a></li>
-            <li><a href="/profile">Profile</a></li>
-            <li><a href="/club">Visit Clubs Page</a></li>
-            <li><a href="/lost_and_found">Lost and Found</a></li>
-            <li><a href="/">Home</a></li>
-            <li><a href="/logout">Logout</a></li>
-        </ul>
-    </nav>
+
+    <main>
+        <nav aria-label="Main Navigation">
+            <ul>
+                <li><a href="/posts" class=aria-label="Posts">
+                        <span>Posts</span>
+                    </a></li>
+                <li><a href="/ride_share" class=aria-label="Ride Share">
+                        <span>Ride Share</span>
+                    </a></li>
+                <li><a href="/messaging/{{ user_id }}" class=aria-label="Messaging">
+                        <span>Messaging</span>
+                    </a></li>
+                <li><a href="/menu" class=aria-label="Menu">
+                        <span>Menu</span>
+                    </a></li>
+                <li><a href="/profile" class=aria-label="Profile">
+                        <span>Profile</span>
+                    </a></li>
+                <li><a href="/club" class=aria-label="Clubs">
+                        <span>Clubs</span>
+                    </a></li>
+                <li><a href="/lost_and_found" class=aria-label="Lost and Found">
+                        <span>Lost & Found</span>
+                    </a></li>
+                <li><a href="/" class=aria-label="Home">
+                        <span>Home</span>
+                    </a></li>
+                <li><a href="/logout" class="logout-btn" aria-label="Logout">
+                        <span>Logout</span>
+                    </a></li>
+            </ul>
+        </nav>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 IIIT Bangalore Hub. All rights reserved.</p>
+        <p class="footer-links">
+            <a href="/privacy">Privacy Policy</a> |
+            <a href="/terms">Terms of Service</a> |
+            <a href="/contact">Contact Us</a>
+        </p>
+    </footer>
 </body>
 
 </html>
