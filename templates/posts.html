@@ -19,10 +19,10 @@
 
         <ul class="posts-list">
             {% for post in posts %}
-            <li class="post-card" onclick="location.href='/post/{{ post['id'] }}'"> <!-- ignore -->
+            <li class="post-card" onclick="location.href='/post/{{ post.id }}'">
                 <h2 class="post-title">{{ post.title }}</h2>
                 <p class="post-content">{{ post.content }}</p>
-                {% if post.get('image_url') %}
+                {% if post.image_url %}
                 <img src="{{ url_for('static', filename=post.image_url) }}" alt="Image for {{ post.title }}"
                     class="post-image" loading="lazy" />
                 {% endif %}
@@ -43,7 +43,7 @@
                 <label for="content">Content</label>
                 <textarea id="content" name="content" placeholder="Write your post content" required></textarea>
                 <label for="post_image">Image (optional)</label>
-                <input type="file" id="post_image" name="post_image" accept="image/png, image/jpeg" />
+                <input type="file" id="post_image" name="picture" accept="image/png, image/jpeg" />
                 <button type="submit">Post</button>
             </form>
         </div>
