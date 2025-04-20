@@ -1,0 +1,7 @@
+flask
+pyrebase
+firestore
+pandas
+openpyxl
+dotenv
+flask_socketio
