@@ -283,7 +283,6 @@ def create_ride():
         "contact": request.form["contact"],
         "user_id": user_id,
     }
-
     # Store ride in Firestore
     db.collection("rides").add(ride_data)
     return redirect(url_for("rideshare"))
