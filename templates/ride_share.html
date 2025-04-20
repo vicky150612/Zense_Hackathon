@@ -1,196 +1,244 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/static/Styles/ride_share.css">
     <title>Ride Share</title>
-    <style>
-        /* Basic modal and filter styling (adjust or move to CSS file) */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 10% auto;
-            padding: 20px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            position: relative;
-        }
-
-        .close {
-            position: absolute;
-            right: 16px;
-            top: 12px;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        #filter-controls {
-            margin: 10px 0;
-        }
-
-        #filter-controls select,
-        #filter-controls button {
-            margin-right: 10px;
-        }
-
-        ul#rideList li {
-            cursor: pointer;
-            padding: 8px;
-            border-bottom: 1px solid #ccc;
-        }
-
-        ul#rideList li:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
 </head>
 
 <body>
-    <h1>Ride Share</h1>
-    <button onclick="showRideModal()">Post a Ride</button>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-car-side"></i> Ride Share</h1>
+            <button class="btn primary-btn" onclick="showRideModal()">
+                <i class="fas fa-plus"></i> Post a Ride
+            </button>
+        </header>
+        <div class="filter-panel">
+            <h2>Find Rides</h2>
+            <div class="filter-controls">
+                <div class="form-group">
+                    <label for="filterFrom">From:</label>
+                    <select id="filterFrom" class="form-control">
+                        <option value="">All Cities</option>
+                        <option value="IIITB">IIITB</option>
+                        <option value="Banglore Airport">Banglore Airport</option>
+                        <option value="Yeswantpur junction">Yeswantpur junction</option>
+                        <option value="SMVT Station">SMVT Station</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filterTo">To:</label>
+                    <select id="filterTo" class="form-control">
+                        <option value="">All Cities</option>
+                        <option value="IIITB">IIITB</option>
+                        <option value="Banglore Airport">Banglore Airport</option>
+                        <option value="Yeswantpur junction">Yeswantpur junction</option>
+                        <option value="SMVT Station">SMVT Station</option>
+                    </select>
+                </div>
+                <button class="btn secondary-btn" onclick="applyFilter()">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+            </div>
+        </div>
 
-    <!-- Filter controls -->
-    <div id="filter-controls">
-        <label>From:
-            <select id="filterFrom">
-                <option value="">All</option>
-                <option value="New York">New York</option>
-                <option value="Los Angeles">Los Angeles</option>
-                <option value="Chicago">Chicago</option>
-                <option value="Houston">Houston</option>
-            </select>
-        </label>
-        <label>To:
-            <select id="filterTo">
-                <option value="">All</option>
-                <option value="New York">New York</option>
-                <option value="Los Angeles">Los Angeles</option>
-                <option value="Chicago">Chicago</option>
-                <option value="Houston">Houston</option>
-            </select>
-        </label>
-        <button onclick="applyFilter()">Filter</button>
+        <div class="rides-container">
+            <h2>Available Rides</h2>
+            <div id="no-rides-message" class="hidden">
+                <p>No matching rides found. Try adjusting your filters or post a new ride.</p>
+            </div>
+            <ul id="rideList" class="ride-list">
+                {% for ride in rides %}
+                <li class="ride-card" data-from="{{ ride.from }}" data-to="{{ ride.to }}" data-date="{{ ride.date }}"
+                    data-time="{{ ride.time }}" data-contact="{{ ride.contact }}">
+                    <div class="ride-info">
+                        <div class="route-info">
+                            <span class="from"><i class="fas fa-map-marker-alt"></i> {{ ride.from }}</span>
+                            <i class="fas fa-arrow-right route-arrow"></i>
+                            <span class="to"><i class="fas fa-map-marker-alt"></i> {{ ride.to }}</span>
+                        </div>
+                        <div class="time-info">
+                            <span><i class="far fa-calendar"></i> {{ ride.date }}</span>
+                            <span><i class="far fa-clock"></i> {{ ride.time }}</span>
+                        </div>
+                    </div>
+                    <div class="ride-actions">
+                        <button class="btn info-btn" onclick="showRideDetails(this.parentNode.parentNode)"><i
+                                class="fas fa-info-circle"></i> Details</button>
+                        {% if ride.user_id == user_id %}
+                        <a href="/delete_ride/{{ ride.id }}" class="btn delete-btn"><i class="fas fa-trash"></i>
+                            Delete</a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <footer>
+            <a href="/main_page" class="back-link"><i class="fas fa-chevron-left"></i> Back to Main Page</a>
+        </footer>
     </div>
 
-    <!-- Modal for creating a new ride -->
     <div id="createRideModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="hideRideModal()">&times;</span>
-            <h2>Create Ride</h2>
+            <div class="modal-header">
+                <h2><i class="fas fa-plus-circle"></i> Create Ride</h2>
+                <span class="close" onclick="hideRideModal()">&times;</span>
+            </div>
             <form method="POST" action="/create_ride">
-                <label for="from">From:</label>
-                <select id="from" name="from" required>
-                    <option value="New York">New York</option>
-                    <option value="Los Angeles">Los Angeles</option>
-                    <option value="Chicago">Chicago</option>
-                    <option value="Houston">Houston</option>
-                </select><br>
-                <label for="to">To:</label>
-                <select id="to" name="to" required>
-                    <option value="New York">New York</option>
-                    <option value="Los Angeles">Los Angeles</option>
-                    <option value="Chicago">Chicago</option>
-                    <option value="Houston">Houston</option>
-                </select><br>
-                <label for="date">Date:</label>
-                <input type="date" id="date" name="date" required><br>
-                <label for="time">Time:</label>
-                <input type="time" id="time" name="time" required><br>
-                <label for="contact">Contact Information:</label>
-                <input type="text" id="contact" name="contact" required><br>
-                <button type="submit">Post Ride</button>
+                <div class="form-group">
+                    <label for="from">From:</label>
+                    <select id="from" name="from" class="form-control" required>
+                        <option value="IIITB">IIITB</option>
+                        <option value="Banglore Airport">Banglore Airport</option>
+                        <option value="Yeswantpur Junction">Yeswantpur Junction</option>
+                        <option value="SMVT Station">SMVT Station</option>
+                        <option value="KSR Bengaluru Station">KSR Bengaluru Station</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="to">To:</label>
+                    <select id="to" name="to" class="form-control" required>
+                        <option value="IIITB">IIITB</option>
+                        <option value="Banglore Airport">Banglore Airport</option>
+                        <option value="Yeswantpur Junction">Yeswantpur Junction</option>
+                        <option value="SMVT Station">SMVT Station</option>
+                        <option value="KSR Bengaluru Station">KSR Bengaluru Station</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group form-half">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date" class="form-control" required>
+                    </div>
+                    <div class="form-group form-half">
+                        <label for="time">Time:</label>
+                        <input type="time" id="time" name="time" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="contact">Contact Information:</label>
+                    <input type="text" id="contact" name="contact" class="form-control" placeholder="Phone or email"
+                        required>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn secondary-btn" onclick="hideRideModal()">Cancel</button>
+                    <button type="submit" class="btn primary-btn">Post Ride</button>
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal for showing ride info -->
     <div id="rideInfoModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="hideInfoModal()">&times;</span>
-            <h2>Ride Details</h2>
-            <p><strong>From:</strong> <span id="infoFrom"></span></p>
-            <p><strong>To:</strong> <span id="infoTo"></span></p>
-            <p><strong>Date:</strong> <span id="infoDate"></span></p>
-            <p><strong>Time:</strong> <span id="infoTime"></span></p>
-            <p><strong>Contact:</strong> <span id="infoContact"></span></p>
+            <div class="modal-header">
+                <h2><i class="fas fa-info-circle"></i> Ride Details</h2>
+                <span class="close" onclick="hideInfoModal()">&times;</span>
+            </div>
+            <div class="ride-details">
+                <div class="detail-group">
+                    <div class="detail-item">
+                        <h3>From:</h3>
+                        <p id="infoFrom"></p>
+                    </div>
+                    <div class="detail-item">
+                        <h3>To:</h3>
+                        <p id="infoTo"></p>
+                    </div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-item">
+                        <h3>Date:</h3>
+                        <p id="infoDate"></p>
+                    </div>
+                    <div class="detail-item">
+                        <h3>Time:</h3>
+                        <p id="infoTime"></p>
+                    </div>
+                </div>
+                <div class="detail-item contact-info">
+                    <h3>Contact:</h3>
+                    <p id="infoContact"></p>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn primary-btn" onclick="hideInfoModal()">Close</button>
+            </div>
         </div>
     </div>
 
-    <!-- Ride list -->
-    <ul id="rideList">
-        {% for ride in rides %}
-        <li data-from="{{ ride.from }}" data-to="{{ ride.to }}" data-date="{{ ride.date }}" data-time="{{ ride.time }}"
-            data-contact="{{ ride.contact }}">
-            From: {{ ride.from }} To: {{ ride.to }} on {{ ride.date }} at {{ ride.time }}
-            {% if ride.user_id == user_id %}
-            <a href="/delete_ride/{{ ride.id }}">Delete</a>
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
-
-    <a href="/main_page">Back to Main Page</a>
-
     <script>
-        // Show/hide create modal
         function showRideModal() {
             document.getElementById('createRideModal').style.display = 'block';
+            document.body.classList.add('modal-open');
         }
+
         function hideRideModal() {
             document.getElementById('createRideModal').style.display = 'none';
+            document.body.classList.remove('modal-open');
         }
-        // Show/hide info modal
-        function showInfoModal() {
-            document.getElementById('rideInfoModal').style.display = 'block';
-        }
+
         function hideInfoModal() {
             document.getElementById('rideInfoModal').style.display = 'none';
+            document.body.classList.remove('modal-open');
         }
-        // Close modals on outside click
+
+        function showRideDetails(rideElement) {
+            document.getElementById('infoFrom').innerText = rideElement.dataset.from;
+            document.getElementById('infoTo').innerText = rideElement.dataset.to;
+            document.getElementById('infoDate').innerText = rideElement.dataset.date;
+            document.getElementById('infoTime').innerText = rideElement.dataset.time;
+            document.getElementById('infoContact').innerText = rideElement.dataset.contact;
+            document.getElementById('rideInfoModal').style.display = 'block';
+            document.body.classList.add('modal-open');
+        }
+
         window.addEventListener('click', function (event) {
             const createModal = document.getElementById('createRideModal');
             const infoModal = document.getElementById('rideInfoModal');
             if (event.target === createModal) hideRideModal();
             if (event.target === infoModal) hideInfoModal();
         });
-        // Attach click event to each ride item
+
         document.addEventListener('DOMContentLoaded', function () {
             const items = document.querySelectorAll('#rideList li');
             items.forEach(item => {
-                item.addEventListener('click', function () {
-                    document.getElementById('infoFrom').innerText = this.dataset.from;
-                    document.getElementById('infoTo').innerText = this.dataset.to;
-                    document.getElementById('infoDate').innerText = this.dataset.date;
-                    document.getElementById('infoTime').innerText = this.dataset.time;
-                    document.getElementById('infoContact').innerText = this.dataset.contact;
-                    showInfoModal();
+                item.addEventListener('click', function (e) {
+                    if (e.target.closest('.ride-actions')) {
+                        return;
+                    }
+                    showRideDetails(this);
                 });
             });
+
+            const dateInput = document.getElementById('date');
+            if (dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.min = today;
+            }
         });
-        // Filtering function
+
         function applyFilter() {
             const fromVal = document.getElementById('filterFrom').value;
             const toVal = document.getElementById('filterTo').value;
             const items = document.querySelectorAll('#rideList li');
+            let visibleCount = 0;
+
             items.forEach(item => {
                 const matchesFrom = !fromVal || item.dataset.from === fromVal;
                 const matchesTo = !toVal || item.dataset.to === toVal;
-                item.style.display = (matchesFrom && matchesTo) ? '' : 'none';
+                const isVisible = matchesFrom && matchesTo;
+
+                item.style.display = isVisible ? '' : 'none';
+                if (isVisible) visibleCount++;
             });
+
+            document.getElementById('no-rides-message').classList.toggle('hidden', visibleCount > 0);
         }
     </script>
 </body>

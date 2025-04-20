@@ -4,71 +4,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IIITB i-Home</title>
+    <title>IIITB Blare</title>
     <link rel="stylesheet" href="/static/Styles/home.css">
 </head>
 
 <body>
-    <nav>
-        <button id="sign_up" aria-label="Sign up" onclick="signup()">Sign Up</button>
-        <button aria-label="Log in" onclick="login()">Log In</button>
+    <nav class="nav">
+        <button id="sign_up" aria-label="Sign up" onclick="signup()" class="btn">Sign Up</button>
+        <button aria-label="Log in" onclick="login()" class="btn">Log In</button>
     </nav>
-    <header>
-        <!-- <h1 id="i">IIIT-</h1>
-        <h1 id="b">B</h1>
-        <h1 id="l">lare</h1> -->
-        <h1>IIIT-Blare</h1>
-        <img src="/static/assets/main_logo.jpg" alt="IIITB Logo" class="logo">
+
+    <header class="header">
+        <div class="header-content fade-in">
+            <h1>IIIT-Blare</h1>
+            <p>Premier technical institute driving innovation</p>
+        </div>
+        <img src="/static/assets/main_logo.jpg" alt="IIITB Logo" class="header-logo fade-in delay-1">
     </header>
 
-    <main>
-        <p>
-            <strong>International Institute of Information Technology, Bangalore</strong> is a premier technical
-            institute offering cutting-edge education and research.
+    <main class="main">
+        <p class="institute-intro fade-in delay-2">
+            <strong>IIITB’s academics emphasize research‑driven, hands‑on learning, offering Integrated and standalone
+                M.Tech, M.Sc. in Digital Society, postgraduate diplomas, B.Tech, MS by Research and Ph.D. across
+                Computer
+                Science, ECE, Data Science, AI, Cybersecurity and Networks. Courses blend theory with industry projects,
+                labs and internships. A flexible credit system and interdisciplinary electives foster innovation, while
+                faculty‑led research ensures cutting‑edge scholarship and mentorship.
         </p>
 
-        <section aria-labelledby="fests-heading">
-            <h2 id="fests-heading">Fests</h2>
-            <div class="fests">
-                <div class="fest-card" id="infin8">
-                    <a href="https://infin8.iiitb.ac.in/" target="_blank" rel="noopener">Infin8</a>
-                    <img src="/static/assets/infin8_logo.png" alt="Infin8 fest logo">
-                    <p class="sutti">Infin8 is an inter-college techno-cultural
-                        festival conducted by IIIT-Bangalore every
-                        year.The students of our college participate with
-                        enthusiasm and compete with the other college
-                        teams for the podium finish.</p>
+        <section class="fests-section" aria-labelledby="fests-heading">
+            <h2 id="fests-heading" class="fade-in delay-3">Fests</h2>
+            <div class="fests-grid">
+                <div class="fest-card fade-in delay-4" onclick="window.open('https://infin8.iiitb.net/', '_blank');">
+                    <img src="/static/assets/infin8_logo.png" alt="Infin8 fest logo" class="fest-logo">
+                    <a href="https://infin8.iiitb.net/" target="_blank" rel="noopener" class="fest-title">Infin8</a>
+                    <p class="fest-description">Infin8 is an inter-college techno-cultural
+                        festival conducted by IIIT-Bangalore every year. Students participate with enthusiasm and
+                        compete with other college teams for the podium finish.</p>
                 </div>
-                <div class="fest-card" id="synergy">
-                    <a href="https://synergy.iiitb.ac.in/" target="_blank" rel="noopener">Synergy</a>
-                    <img src="/static/assets/synergy_logo.png" alt="Synergy fest logo">
-                    <p class="sutti">Synergy, the tech fest of IIIT-
-                        Bangalore, ignites minds with
-                        innovation and collaboration.
-                        Synergy
-                        fosters a dynamic ecosystem where
-                        ideas converge, propelling the future
-                        of technology forward.</p>
+
+                <div class="fest-card fade-in delay-5" onclick="window.open('https://synergy.iiitb.ac.in/', '_blank');">
+                    <img src="/static/assets/synergy_logo.png" alt="Synergy fest logo" class="fest-logo">
+                    <a href="https://synergy.iiitb.ac.in/" target="_blank" rel="noopener" class="fest-title">Synergy</a>
+                    <p class="fest-description">Synergy, the tech fest of IIIT-Bangalore,
+                        ignites minds with innovation and collaboration, fostering a dynamic ecosystem where ideas
+                        converge.</p>
                 </div>
-                <div class="fest-card" id="spandan">
-                    <a href="https://www.iiitb.ac.in/events-and-festivals/events/spandan" target="_blank"
-                        rel="noopener">Spandan</a>
-                    <img src="/static/assets/spandan_logo111.png" alt="Spandan fest logo">
-                    <p class="sutti">Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus quam, cumque
-                        autem sequi
-                        maiores facere soluta modi sit qui asperiores? Beatae quae deleniti culpa numquam praesentium
-                        dolorem magni aspernatur voluptatem?</p>
+
+                <div class="fest-card fade-in delay-6"
+                    onclick="window.open('https://www.iiitb.ac.in/events-and-festivals/events/spandan', '_blank');">
+                    <img src="/static/assets/spandan_logo111.png" alt="Spandan fest logo" class="fest-logo">
+                    <a href="https://www.iiitb.ac.in/events-and-festivals/events/spandan" target="_blank" rel="noopener"
+                        class="fest-title">Spandan</a>
+                    <p class="fest-description">Spandan, IIIT-Bangalore's
+                        annual sports meet held in
+                        March, is a vibrant three-day
+                        event packed with diverse
+                        indoor and outdoor games.
+                        Beyond sports, Spandan
+                        serves as a nostalgic reunion
+                        for alumni, strengthening
+                        ties between past and
+                        present generations.
+                    </p>
                 </div>
             </div>
         </section>
     </main>
+
+    <footer class="footer">
+        <p>Built as a part of Zense Hacknite 2025</p>
+        <p>© 2025 SyeRaa. All rights reserved.</p>
+    </footer>
+
     <script>
         function signup() {
             window.location.href = "/signup";
         }
+
         function login() {
             window.location.href = "/login";
         }
+
+        // Select all anchor links and set property scrollintoview as smooth..
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // When user scrolls till the point of the element, the fade-in animation will start...
+        document.addEventListener('DOMContentLoaded', function () {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            document.querySelectorAll('.fade-in').forEach(element => {
+                element.style.animationPlayState = 'paused';
+                observer.observe(element);
+            });
+        });
     </script>
 </body>
 

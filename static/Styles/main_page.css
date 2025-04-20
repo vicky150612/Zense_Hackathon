@@ -1,158 +1,204 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-primary: #121212;
-  --bg-secondary: #1E2A44;
-  --accent-primary: #00BFFF;
-  --accent-secondary: #00FF99;
+  --primary-color: #000000;
+  --secondary-color: #111111;
+  --accent-color: #00BFFF;
   --text-primary: #FFFFFF;
-  --text-secondary: #B0B0B0;
-  --card-bg: #1E1E1E;
-  --transition-speed: 0.3s;
+  --text-secondary: #888888;
+  --success-color: #00BFFF;
+  --warning-color: #FFD700;
+  --error-color: #FF4655;
+  --border-radius: 12px;
+  --transition-speed: 0.25s;
+  --shadow-sm: 0 2px 8px rgba(0, 191, 255, 0.1);
+  --shadow-md: 0 4px 16px rgba(0, 191, 255, 0.15);
+  --gradient-primary: linear-gradient(135deg, #000000 0%, #111111 100%);
 }
 
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
-  background: var(--bg-primary);
+  font-family: 'Inter', sans-serif;
+  background-color: var(--primary-color);
   color: var(--text-primary);
   line-height: 1.6;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
-header {
-  background: linear-gradient(135deg, #2A1E44, #1A1A1A);
-  padding: 2.5rem 1rem;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+.main-header {
+  background: var(--gradient-primary);
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-}
-
-header h1 {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  position: relative;
-  z-index: 1;
-}
-
-main {
-  padding: 2rem 1rem;
-  flex: 1;
-}
-
-nav {
-  margin: 2rem 0;
-}
-
-nav ul {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1rem;
-  max-width: 1200px;
+.header-content {
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-nav li {
-  margin: 0;
+.branding {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-nav a {
-  color: var(--accent-primary);
-  text-decoration: none;
-  padding: 1rem;
-  border: 2px solid var(--accent-primary);
-  border-radius: 8px;
-  transition: all var(--transition-speed) ease;
-  font-weight: 500;
+.institute-logo {
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 100%;
-  background-color: rgba(0, 191, 255, 0.05);
-  position: relative;
-  overflow: hidden;
+  gap: 0.75rem;
+  font-size: 1.75rem;
+  color: var(--text-primary);
+  cursor: pointer;
 }
 
-nav a::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 191, 255, 0.1), transparent);
-  transition: all 0.6s ease;
+.logo-icon {
+  background: var(--accent-color);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 700;
 }
 
-nav a:hover {
-  background: rgba(0, 191, 255, 0.15);
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 191, 255, 0.3);
-}
-
-nav a:hover::before {
-  left: 100%;
-}
-
-nav a.active {
-  background: var(--accent-primary);
-  color: var(--bg-primary);
+.logo-text {
   font-weight: 600;
-  box-shadow: 0 0 20px rgba(0, 191, 255, 0.5);
-  border-color: transparent;
+  letter-spacing: -0.5px;
 }
 
-footer {
-  background-color: var(--bg-secondary);
-  color: var(--text-secondary);
-  padding: 1.5rem;
+.tagline {
   font-size: 0.9rem;
-  text-align: center;
-  margin-top: auto;
+  color: var(--text-secondary);
+  font-weight: 300;
 }
 
-footer p {
-  max-width: 1200px;
+.main-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all var(--transition-speed) ease;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.logout {
+  color: var(--error-color);
+}
+
+.content-wrapper {
+  flex: 1;
+  padding: 2.5rem 2rem;
+}
+
+.dashboard-grid {
+  max-width: 1280px;
   margin: 0 auto;
+  display: grid;
+  gap: 2rem;
+}
+
+.service-card {
+  background: var(--secondary-color);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text-primary);
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.service-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  color: var(--text-primary);
+  background-color: var(--primary-color);
+  transition: all var(--transition-speed) ease;
+  text-align: center;
+}
+
+.service-item i {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--accent-color);
+  transition: transform var(--transition-speed) ease;
+}
+
+.service-item span {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.service-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.service-item:hover i {
+  transform: scale(1.15);
+}
+
+.institute-motto {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-style: italic;
 }
 
 @media (max-width: 768px) {
-  nav ul {
-    grid-template-columns: repeat(2, 1fr);
+  .header-content {
+    flex-direction: column;
+    gap: 1.5rem;
   }
-}
-
-@media (max-width: 480px) {
-  nav ul {
+  .dashboard-grid {
     grid-template-columns: 1fr;
   }
-  
-  header {
-    padding: 2rem 1rem;
+}
+@media (max-width: 480px) {
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
+  .service-item {
+    padding: 1.5rem;
+  }
+  .content-wrapper {
+    padding: 1.5rem;
   }
 }

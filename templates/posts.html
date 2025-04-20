@@ -1,66 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/Styles/posts.css">
+    <meta name="description" content="View and create posts">
     <title>Posts</title>
+    <link rel="stylesheet" href="/static/Styles/posts.css">
 </head>
 
 <body>
-    <h1>Posts</h1>
-    <button onclick="showModal()">Create New Post</button><br>
-    <ul>
-        {% for post in posts %}
-        <li>
-            <h3>{{ post["title"] }}</h3>
-            <p>{{ post["content"] }}</p>
-            {% if post.get("image_url") %}
-            <img src="{{ url_for('static', filename=post.get('image_url')) }}" class="post-image" alt="Post image">
-            {% endif %}
-            <p>(by User {{ post["user_id"] }})</p>
-            <button>
-                <a href="/post/{{ post['id'] }}">View</a>
-            </button>
-        </li>
-        {% endfor %}
-    </ul>
-    <a href="/main_page">Back to Main Page</a>
 
-    <!-- Modal for creating a new post -->
-    <div id="createPostModal">
+    <div class="container">
+        <h1>Posts</h1>
+        <hr class="underline">
+
+        <button id="createPostBtn" type="button">Create New Post</button>
+
+        <ul class="posts-list">
+            {% for post in posts %}
+            <li class="post-card" onclick="location.href='/post/{{ post['id'] }}'"> <!-- ignore -->
+                <h2 class="post-title">{{ post.title }}</h2>
+                <p class="post-content">{{ post.content }}</p>
+                {% if post.get('image_url') %}
+                <img src="{{ url_for('static', filename=post.image_url) }}" alt="Image for {{ post.title }}"
+                    class="post-image" loading="lazy" />
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+
+        <a href="/main_page" class="back-link">&larr; Back to Main Page</a>
+    </div>
+
+    <div id="createPostModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="hideModal()">&times;</span>
+            <span class="close">&times;</span>
             <h2>Create Post</h2>
-            <form method="POST" action="/create_post" enctype="multipart/form-data">
-                <input type="text" name="title" placeholder="Title" required><br>
-                <label for="content">Content:</label>
-                <textarea id="content" name="content" required></textarea><br>
-                <label for="profile_picture">Image (optional):</label>
-                <input type="file" id="profile_picture" name="profile_picture" accept="image/png, image/jpeg"><br>
+            <form id="createPostForm" method="POST" action="/create_post" enctype="multipart/form-data">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" placeholder="Enter post title" required />
+                <label for="content">Content</label>
+                <textarea id="content" name="content" placeholder="Write your post content" required></textarea>
+                <label for="post_image">Image (optional)</label>
+                <input type="file" id="post_image" name="post_image" accept="image/png, image/jpeg" />
                 <button type="submit">Post</button>
             </form>
         </div>
     </div>
 
-    <!-- JavaScript to control modal visibility -->
     <script>
-        function showModal() {
-            document.getElementById('createPostModal').style.display = 'block';
-        }
-        function hideModal() {
-            document.getElementById('createPostModal').style.display = 'none';
-        }
-        document.getElementById('createPostModal').addEventListener('click', function (event) {
-            if (event.target == this) {
-                hideModal();
-            }
-        });
-    </script>
+        const modal = document.getElementById("createPostModal");
+        const btn = document.getElementById("createPostBtn");
+        const closeBtn = document.querySelector(".close");
 
-    <!-- Original Cloudflare script from posts.html -->
-    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'92f943d0ce69adde',t:'MTc0NDUyOTQ5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+        btn.onclick = function () {
+            modal.classList.add("show");
+        }
+
+        closeBtn.onclick = function () {
+            modal.classList.remove("show");
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.classList.remove("show");
+            }
+        }
+    </script>
 </body>
 
 </html>

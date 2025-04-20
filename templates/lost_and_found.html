@@ -3,14 +3,17 @@
 
 <head>
     <title>Lost and Found</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/Styles/lost_and_found.css">
 </head>
 
 <body>
     <h1>Lost and Found</h1>
-    <button onclick="showLostFoundModal()">Post an Item</button><br>
+    <div class="post-button-container">
+        <button onclick="showLostFoundModal()">Post an Item</button>
+    </div>
 
-    <!-- Modal for posting a new item -->
     <div id="postLostFoundModal">
         <div class="modal-content">
             <span class="close" onclick="hideLostFoundModal()">×</span>
@@ -43,7 +46,6 @@
     </div>
     <a href="/main_page">Back to Main Page</a>
 
-    <!-- JavaScript to control modal -->
     <script>
         function showLostFoundModal() {
             document.getElementById('postLostFoundModal').style.display = 'block';
@@ -51,16 +53,12 @@
         function hideLostFoundModal() {
             document.getElementById('postLostFoundModal').style.display = 'none';
         }
-        // Close modal when clicking outside the content
         document.getElementById('postLostFoundModal').addEventListener('click', function (event) {
             if (event.target === this) {
                 hideLostFoundModal();
             }
         });
     </script>
-
-    <!-- Cloudflare script from lost_and_found.html -->
-    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'92f9526ae9bcdd1c',t:'MTc0NDUzMDA5NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
 </body>
 
 </html>

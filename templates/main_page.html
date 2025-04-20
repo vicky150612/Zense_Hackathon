@@ -2,62 +2,77 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="IIIT Bangalore Hub - Connect with students, share rides, and more">
-    <title>IIITB Hub</title>
-    <link rel="stylesheet" href="/static/Styles/main_page.css">
-    <link rel="icon" href="/static/Images/favicon.ico" type="image/x-icon">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="IIIT Bangalore Hub - Connect with students, share rides, and more" />
+    <title>IIITB Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/Styles/main_page.css" />
+    <link rel="icon" href="/static/Images/favicon.ico" type="image/x-icon" />
 </head>
 
 <body>
-    <header>
-        <h1>Welcome!</h1>
-        <p class="tagline">Your gateway to the IIIT Bangalore community</p>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="branding">
+                <h1 class="institute-logo" onclick="window.location.href='/'">
+                    <span class="logo-icon">IIITB</span>
+                    <span class="logo-text">Home</span>
+                </h1>
+                <p class="tagline">Integrated Campus Platform</p>
+            </div>
+            <nav class="main-nav">
+                <a href="/logout" class="nav-item logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <nav aria-label="Main Navigation">
-            <ul>
-                <li><a href="/posts" class=aria-label="Posts">
+    <main class="content-wrapper">
+        <div class="dashboard-grid">
+            <section class="service-card">
+                <h2 class="section-title"><i class="fas fa-users"></i> Community Services</h2>
+                <div class="service-grid">
+                    <a href="/posts" class="service-item">
+                        <i class="fas fa-twitter"></i>
                         <span>Posts</span>
-                    </a></li>
-                <li><a href="/ride_share" class=aria-label="Ride Share">
-                        <span>Ride Share</span>
-                    </a></li>
-                <li><a href="/messaging/{{ user_id }}" class=aria-label="Messaging">
+                    </a>
+                    <a href="/messaging/{{ user_id }}" class="service-item">
+                        <i class="fas fa-envelope"></i>
                         <span>Messaging</span>
-                    </a></li>
-                <li><a href="/menu" class=aria-label="Menu">
-                        <span>Menu</span>
-                    </a></li>
-                <li><a href="/profile" class=aria-label="Profile">
+                    </a>
+                    <a href="/profile" class="service-item">
+                        <i class="fas fa-user-circle"></i>
                         <span>Profile</span>
-                    </a></li>
-                <li><a href="/club" class=aria-label="Clubs">
+                    </a>
+                    <a href="/club" class="service-item">
+                        <i class="fas fa-users-cog"></i>
                         <span>Clubs</span>
-                    </a></li>
-                <li><a href="/lost_and_found" class=aria-label="Lost and Found">
-                        <span>Lost & Found</span>
-                    </a></li>
-                <li><a href="/" class=aria-label="Home">
-                        <span>Home</span>
-                    </a></li>
-                <li><a href="/logout" class="logout-btn" aria-label="Logout">
-                        <span>Logout</span>
-                    </a></li>
-            </ul>
-        </nav>
-    </main>
+                    </a>
+                </div>
+            </section>
 
-    <footer>
-        <p>&copy; 2025 IIIT Bangalore Hub. All rights reserved.</p>
-        <p class="footer-links">
-            <a href="/privacy">Privacy Policy</a> |
-            <a href="/terms">Terms of Service</a> |
-            <a href="/contact">Contact Us</a>
-        </p>
-    </footer>
+            <section class="service-card">
+                <h2 class="section-title"><i class="fas fa-toolbox"></i> Campus Utilities</h2>
+                <div class="service-grid">
+                    <a href="/ride_share" class="service-item">
+                        <i class="fas fa-car-side"></i>
+                        <span>Ride Sharing</span>
+                    </a>
+                    <a href="/lost_and_found" class="service-item">
+                        <i class="fas fa-search"></i>
+                        <span>Lost and Found</span>
+                    </a>
+                    <a href="/menu" class="service-item">
+                        <i class="fas fa-utensils"></i>
+                        <span>Menu</span>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
 </body>
 
 </html>

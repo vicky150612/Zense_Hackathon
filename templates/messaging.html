@@ -3,54 +3,92 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/Styles/messaging.css">
     <title>Messaging</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const socket = io();
-            const room = 'chat_room';  // For simplicity, using a single room
-
-            socket.on('connect', () => {
-                socket.emit('join', { room: room });
-            });
-
-            socket.on('message', (data) => {
-                const messages = document.getElementById('messages');
-                const p = document.createElement('p');
-                p.textContent = data;
-                messages.appendChild(p);
-            });
-
-            document.getElementById('send').addEventListener('click', () => {
-                const messageInput = document.getElementById('message');
-                const content = messageInput.value;
-                socket.emit('message', {
-                    room: room,
-                    user_id: "{{user_id}}",
-                    username: "{{username}}",
-                    content: content
-                });
-                messageInput.value = '';
-            });
-        });
-    </script>
+    <link rel="stylesheet" href="/static/Styles/messaging.css">
 </head>
 
 <body>
-    <h1>Messaging</h1>
-    <h2>Chat</h2>
-    <div id="messages">
-        {% for message in messages %}
-        <p>{{ message }}</p>
-        {% endfor %}
+    <div class="container">
+        <header>
+            <h1>Messaging</h1>
+            <h2>Chat Room</h2>
+        </header>
+
+        <div class="chat-container">
+            <div id="messages">
+                {% for message in messages %}
+                <p><strong>{{ message.username }}:</strong> {{ message.content }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="input-area">
+                <input type="text" id="message" placeholder="Type your message here..." autocomplete="off">
+                <button id="send">Send</button>
+            </div>
+        </div>
+
+        <a href="/main_page" class="back-link">← Back to Main Page</a>
     </div>
-    <input type="text" id="message" placeholder="Type a message">
-    <button id="send">Send</button>
-    <br>
-    <a href="/main_page">Back to Main Page</a>
-    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9303b163ba477b96',t:'MTc0NDYzODg0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+
+    <script>
+        let socket = io();
+        let room = "chat_room";
+        let user_id = "{{ user_id }}";
+        let username = "{{ username }}";
+
+        let messagesDiv = document.getElementById('messages');
+
+        function scrollToBottom() {
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        socket.on("connect", () => {
+            socket.emit("join", { room });
+        });
+
+        socket.on("message", (data) => {
+            console.log(data);
+            let p = document.createElement("p");
+            let strong = document.createElement("strong");
+            let x = data.split(":");
+            username = x[0];
+            let content = x[1];
+            for (let i = 2; i < x.length; i++) {
+                content += ":" + x[i];
+            }
+            strong.textContent = `${username}: `;
+            p.appendChild(strong);
+            p.appendChild(document.createTextNode(content));
+            messagesDiv.appendChild(p);
+            scrollToBottom();
+        });
+
+        document.getElementById("send").addEventListener("click", sendMessage);
+        document.getElementById("message").addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            let input = document.getElementById("message");
+            let content = input.value.trim();
+            if (content) {
+                socket.emit("message", {
+                    room,
+                    user_id,
+                    username,
+                    content
+                });
+                input.value = "";
+                input.focus();
+            }
+        }
+
+        scrollToBottom();
+    </script>
 </body>
 
 </html>

@@ -8,7 +8,6 @@ import time
 import pandas as pd
 
 load_dotenv()
-# Pyrebase configuration (replace with your Firebase project details)
 config = {
     "apiKey": os.getenv("apiKey"),
     "authDomain": os.getenv("authDomain"),
@@ -51,6 +50,9 @@ def signup():
         email = request.form["email"]
         password = request.form["password"]
         error = ""
+        if "@iiitb.ac.in" not in email:
+            error = "This email is not valid. Please use your college email."
+            return render_template("signup.html", error=error)
         try:
             # Create user with Pyrebase
             user = auth.create_user_with_email_and_password(email, password)
@@ -63,14 +65,12 @@ def signup():
             db.collection("users").document(uid).set(
                 {"username": "", "email": email, "bio": ""}
             )
-            return "Signup successful! Please check your email to verify."
+            return "Signup successful! Please check your email to verify.<br> <a href='/login'>Proceed to login</a>"
         except Exception as e:
             if "INVALID_EMAIL" in str(e):
-                error = "Invalid email format. Please enter a valid email."
+                error = "Invalid email. Please enter a valid email."
             elif "WEAK_PASSWORD" in str(e):
                 error = "Weak password. Please enter a stronger password."
-            elif "EMAIL_NOT_FOUND" in str(e):
-                error = "Email not found. Please sign up."
             elif "TOO_MANY_ATTEMPTS_TRY_LATER" in str(e):
                 error = "Too many attempts. Please try again later."
             elif "EMAIL_EXISTS" in str(e):
@@ -113,18 +113,14 @@ def login():
             else:
                 return redirect(url_for("main_page", user_id=uid))
         except Exception as e:
-            if "EMAIL_NOT_FOUND" in str(e):
+            if "EMAIL_NOT_FOUND" in str(e) or "USER_NOT_FOUND" in str(e):
                 error = "Email not found. Please sign up."
-            elif "USER_NOT_FOUND" in str(e):
-                error = "User not found. Please sign up."
             elif "INVALID_PASSWORD" in str(e):
                 error = "Invalid password. Please enter the correct password."
             elif "USER_DISABLED" in str(e):
                 error = "User account is disabled. Please contact support."
             elif "TOO_MANY_ATTEMPTS_TRY_LATER" in str(e):
                 error = "Too many attempts. Please try again later."
-            elif "INVALID_EMAIL" in str(e):
-                error = "Invalid email format. Please enter a valid email."
             elif "INVALID_LOGIN_CREDENTIALS" in str(e):
                 error = "Invalid credentials. Please check your email and password."
     # If GET request, render the login page
@@ -143,7 +139,6 @@ def set_username():
     # Update username in Firestore
     user_ref = db.collection("users").document(user_id)
     user_ref.update({"username": username})
-    # Redirect to main page after setting username
     return redirect(url_for("main_page", user_id=user_id))
 
 
@@ -170,7 +165,12 @@ def posts():
         post_data = post.to_dict()
         post_data["id"] = post.id
         posts_list.append(post_data)
-    return render_template("posts.html", user_id=user_id, posts=posts_list)
+    # Fetch user data from Firestore
+    user_ref = db.collection("users").document(user_id)
+    user_data = user_ref.get().to_dict()
+    return render_template(
+        "posts.html", user_id=user_id, posts=posts_list, user_data=user_data
+    )
 
 
 # Create Post
@@ -244,6 +244,11 @@ def delete_post():
     post_id = request.form["id"]
     # Delete post from Firestore
     db.collection("posts").document(post_id).delete()
+    # Delete post image if it exists
+    if "image_url" in post_data:
+        image_path = os.path.join("static", post_data["image_url"])
+        if os.path.exists(image_path):
+            os.remove(image_path)
     return redirect(url_for("posts", user_id=session["user"]))
 
 
@@ -301,7 +306,6 @@ def messaging(user_id):
     user_ref = db.collection("users").document(user_id)
     user_data = user_ref.get().to_dict()
     username = user_data["username"]
-    # Fetch messages for the room 'chat_room'
     messages_ref = (
         db.collection("messages").where("room", "==", "chat_room").order_by("timestamp")
     )
@@ -309,7 +313,7 @@ def messaging(user_id):
     messages_list = []
     for msg in messages:
         msg_data = msg.to_dict()
-        messages_list.append(f"{msg_data['username']}: {msg_data['content']}")
+        messages_list.append(msg_data)
     return render_template(
         "messaging.html", user_id=user_id, username=username, messages=messages_list
     )
@@ -326,7 +330,6 @@ def on_join(data):
 def on_leave(data):
     room = data["room"]
     leave_room(room)
-    send(f"User has left the room.", to=room)
 
 
 @socketio.on("message")
@@ -371,21 +374,12 @@ def edit_profile():
     if "user" not in session:
         return redirect(url_for("login"))
     user_id = session["user"]
-
-    # Get bio from form
     bio = request.form.get("bio", "")
 
-    # Handle profile picture upload
     upload_folder = os.path.join("static", "uploads/profiles")
 
-    # Make sure the uploads directory exists
     if not os.path.exists(upload_folder):
-        try:
-            os.makedirs(upload_folder)
-            print(f"Created directory: {upload_folder}")
-        except Exception as e:
-            print(f"Error creating directory: {e}")
-            return f"Error creating uploads directory: {e}"
+        os.makedirs(upload_folder)
 
     profile_picture = request.files.get("profile_picture")
     updates = {"bio": bio}
@@ -400,20 +394,15 @@ def edit_profile():
                 filename = f"{user_id}{file_ext}"
                 photo_path = os.path.join(upload_folder, filename)
                 profile_picture.save(photo_path)
-                print(f"Saved image to: {photo_path}")
 
-                # Store the path relative to static folder
                 updates["profile_picture"] = f"uploads/profiles/{filename}"
             except Exception as e:
-                print(f"Error saving file: {e}")
                 return f"Error saving profile picture: {e}"
     # Update user data in Firestore
     try:
         user_ref = db.collection("users").document(user_id)
         user_ref.update(updates)
-        print(f"Updated user profile with: {updates}")
     except Exception as e:
-        print(f"Error updating profile: {e}")
         return f"Error updating profile in database: {e}"
 
     return redirect(url_for("profile"))
@@ -474,6 +463,7 @@ def club_zense():
     return render_template("/clubs/Zense.html")
 
 
+# Read the menu excel file
 def menu(file_path):
     df = pd.read_excel(file_path, header=None)
 
@@ -523,6 +513,7 @@ def menu(file_path):
     return organized_menu
 
 
+# Route to regenerate the menu
 @app.route("/generate_menu")
 def generate_menu():
     file_path = r"static\assets\menu.xlsx"
@@ -545,6 +536,7 @@ def generate_menu():
     return "Menu HTML generated successfully"
 
 
+# Route to display the menu
 @app.route("/menu")
 def menu_page():
     try:

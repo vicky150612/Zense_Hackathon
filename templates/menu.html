@@ -10,51 +10,21 @@
 
 <body>
     <div class="container">
-        <!-- Day Selector Wheel -->
-        <div class="day-wheel-container">
-            <div class="day-wheel">
-                <div class="day-circle">
-                    {% for day in days %}
-                    {#
-                    Determine abbreviations:
-                    - "Monday": "M"
-                    - "Tuesday": "T"
-                    - "Wednesday": "W"
-                    - "Thursday": "Th"
-                    - "Friday": "F"
-                    - "Saturday": "Sa"
-                    - "Sunday": "Su"
-                    #}
-                    {% if day == 'Thursday' %}
-                    {% set abbr = 'Th' %}
-                    {% elif day == 'Saturday' %}
-                    {% set abbr = 'Sa' %}
-                    {% elif day == 'Sunday' %}
-                    {% set abbr = 'Su' %}
-                    {% else %}
-                    {% set abbr = day[0] %}
-                    {% endif %}
-
-                    {# You can set the default active day as Wednesday (or any other day) #}
-                    <span class="day-letter{% if day == 'Wednesday' %} active{% endif %}" data-day="{{ abbr }}">
-                        {{ abbr }}
-                    </span>
-                    {% endfor %}
-                </div>
-            </div>
+        <div class="tab-nav" role="tablist" aria-label="Select a day">
+            {% for day in days %}
+            <button class="tab-button" role="tab" aria-controls="{{ day|lower }}-menu" aria-selected="false"
+                data-day="{{ day|lower }}" tabindex="0">
+                {{ 'Th' if day == 'Thursday' else 'Sa' if day == 'Saturday' else 'Su' if day == 'Sunday' else day[0:3]
+                }}
+            </button>
+            {% endfor %}
         </div>
 
-        <!-- Content Area -->
         <div class="content-area">
             {% for day in days %}
-            {# Create the header for each day; hide all except for the default active day (e.g., Wednesday) #}
-            <div class="day-header" id="{{ day|lower }}-header"
-                class="day-header{% if day != 'Wednesday' %} hidden{% endif %}">
-                {{ day.upper() }}
+            <div class="day-header" id="{{ day|lower }}-header">
             </div>
-
-            {# Create the menu content for each day #}
-            <div class="menu-content{% if day == 'Wednesday' %} active{% endif %}" id="{{ day|lower }}-menu">
+            <div class="menu-content" id="{{ day|lower }}-menu" role="tabpanel">
                 {% for meal, items in menu[day].items() %}
                 <div class="meal-section">
                     <h3>{{ meal }}</h3>
@@ -70,70 +40,52 @@
         </div>
     </div>
 
-    <script src="/menu.js"></script>
     <script>
-        // Get all day letters and menu items
-        const dayLetters = document.querySelectorAll('.day-letter');
+        const tabButtons = document.querySelectorAll('.tab-button');
         const dayHeaders = document.querySelectorAll('.day-header');
         const menuContents = document.querySelectorAll('.menu-content');
 
-        // Initialize with Wednesday active (as set in the template)
-        showDay('W');
+        function showDay(day) {
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+                button.setAttribute('aria-selected', 'false');
+            });
+            dayHeaders.forEach(header => header.classList.remove('active'));
+            menuContents.forEach(content => {
+                content.classList.remove('active');
+                content.style.opacity = 0;
+            });
 
-        // Add click event listeners to day letters
-        dayLetters.forEach(letter => {
-            letter.addEventListener('click', function () {
-                const day = this.getAttribute('data-day');
-                showDay(day);
+            const activeButton = document.querySelector(`.tab-button[data-day="${day}"]`);
+            const activeHeader = document.getElementById(`${day}-header`);
+            const activeMenu = document.getElementById(`${day}-menu`);
+
+            if (activeButton && activeHeader && activeMenu) {
+                activeButton.classList.add('active');
+                activeButton.setAttribute('aria-selected', 'true');
+                activeHeader.classList.add('active');
+                activeMenu.classList.add('active');
+                setTimeout(() => activeMenu.style.opacity = 1, 50);
+            }
+
+            localStorage.setItem('activeDay', day);
+        }
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => showDay(button.dataset.day));
+            button.addEventListener('keypress', e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    showDay(button.dataset.day);
+                }
             });
         });
 
-        // Function to show the selected day
-        function showDay(day) {
-            // Reset all active states
-            dayLetters.forEach(letter => letter.classList.remove('active'));
-            dayHeaders.forEach(header => header.style.display = 'none');
-            menuContents.forEach(content => content.classList.remove('active'));
-
-            // Set active state for the clicked day-letter
-            document.querySelector(`.day-letter[data-day="${day}"]`).classList.add('active');
-
-            // Determine header and menu IDs based on the clicked day letter
-            let headerID, menuID;
-            switch (day) {
-                case 'M':
-                    headerID = 'monday-header';
-                    menuID = 'monday-menu';
-                    break;
-                case 'T':
-                    headerID = 'tuesday-header';
-                    menuID = 'tuesday-menu';
-                    break;
-                case 'W':
-                    headerID = 'wednesday-header';
-                    menuID = 'wednesday-menu';
-                    break;
-                case 'Th':
-                    headerID = 'thursday-header';
-                    menuID = 'thursday-menu';
-                    break;
-                case 'F':
-                    headerID = 'friday-header';
-                    menuID = 'friday-menu';
-                    break;
-                case 'Sa':
-                    headerID = 'saturday-header';
-                    menuID = 'saturday-menu';
-                    break;
-                case 'Su':
-                    headerID = 'sunday-header';
-                    menuID = 'sunday-menu';
-                    break;
-            }
-
-            document.getElementById(headerID).style.display = 'block';
-            document.getElementById(menuID).classList.add('active');
-        }
+        window.addEventListener('load', () => {
+            const savedDay = localStorage.getItem('activeDay');
+            const today = new Date().toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+            const dayToShow = savedDay || today;
+            showDay(dayToShow);
+        });
     </script>
 </body>
 

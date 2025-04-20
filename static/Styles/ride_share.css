@@ -1,258 +1,447 @@
-/* ride_share.css */
-
-/* Import modern sans-serif font */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
-/* Define global variables for theme consistency */
 :root {
-  --bg-primary: #1A1A1A;
-  --bg-secondary: #1E2A44;
-  --accent-primary: #00BFFF;
-  --accent-secondary: #00FF99;
-  --text-primary: #FFFFFF;
-  --text-secondary: #B0B0B0;
+  --bg-primary: #0a0e17;
+  --text-primary: #f0f2f5;
+  --text-secondary: #d0d3d9;
+  --accent-primary: #4da3ff;
+  --accent-secondary: #3452b5;
+  --card-bg: rgba(255, 255, 255, 0.07);
+  --card-border: rgba(255, 255, 255, 0.15);
+  --border-radius: 16px;
+  --transition-time: 0.3s;
+  --max-width: 1200px;
+  --padding: 24px;
+  --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --hover-shadow: 0 12px 32px rgba(77, 163, 255, 0.3);
+  --danger: #ff5b5b;
+  --danger-hover: #ff3333;
+  --success: #2ecc71;
+  --warning: #f39c12;
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --dropdown-bg: #0f1520;
+  --modal-overlay: rgba(0, 0, 0, 0.8);
 }
 
-/* Reset and base styles */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
-  background: var(--bg-primary);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-primary);
   color: var(--text-primary);
-  padding: 20px;
   line-height: 1.6;
+  min-height: 100vh;
 }
 
-/* Header styling */
+body.modal-open {
+  overflow: hidden;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--padding);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
 h1 {
+  color: var(--accent-primary);
   font-size: 2.5rem;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-shadow: 0 0 5px var(--accent-primary);
-  margin-bottom: 20px;
-  text-align: center;
 }
 
-/* Button styling */
-button {
-  background: var(--accent-primary);
+h2 {
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+h3 {
+  color: var(--accent-primary);
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+p {
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.btn {
+  background: transparent;
+  border: none;
   color: var(--text-primary);
   padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   cursor: pointer;
-  transition: background 0.3s ease;
-  animation: pulse 2s infinite;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all var(--transition-time);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-button:hover {
+.primary-btn {
+  background: var(--accent-primary);
+  color: white;
+}
+
+.primary-btn:hover {
   background: var(--accent-secondary);
+  box-shadow: var(--hover-shadow);
+  transform: translateY(-2px);
 }
 
-@keyframes pulse {
-  0% { box-shadow: 0 0 5px var(--accent-primary); }
-  50% { box-shadow: 0 0 15px var(--accent-primary); }
-  100% { box-shadow: 0 0 5px var(--accent-primary); }
+.secondary-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
 }
 
-/* Filter controls */
-#filter-controls {
+.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-primary);
+}
+
+.delete-btn {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.delete-btn:hover {
+  background: var(--danger);
+  color: white;
+}
+
+.info-btn {
+  background: transparent;
+  border: 1px solid var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.info-btn:hover {
+  background: rgba(77, 163, 255, 0.1);
+}
+
+.filter-panel {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 24px;
+  margin-bottom: 32px;
+  border: 1px solid var(--card-border);
+}
+
+.filter-controls {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  margin: 20px auto;
-  max-width: 800px;
+  gap: 16px;
+  align-items: flex-end;
 }
 
-#filter-controls label {
+.form-group {
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 16px;
+}
+
+.form-row {
   display: flex;
-  align-items: center;
-  color: var(--text-primary);
-  margin: 5px 10px;
-  font-size: 1rem;
-}
-
-#filter-controls select {
-  padding: 8px 12px;
-  margin-left: 5px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--accent-primary);
-  border-radius: 5px;
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: box-shadow 0.3s ease;
-}
-
-#filter-controls select:focus {
-  outline: none;
-  box-shadow: 0 0 5px var(--accent-primary);
-}
-
-/* Ride list styling */
-ul#rideList {
-  list-style: none;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-ul#rideList li {
-  background: var(--bg-secondary);
-  border: 1px solid var(--accent-primary);
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  transition: transform 0.3s ease, background 0.3s ease;
-  cursor: pointer;
-}
-
-ul#rideList li:hover {
-  transform: scale(1.02);
-  background: #2A3560;
-}
-
-li a {
-  color: var(--accent-primary);
-  text-decoration: none;
-  margin-left: 10px;
-  transition: color 0.3s ease;
-}
-
-li a:hover {
-  color: var(--accent-secondary);
-  text-decoration: underline;
-}
-
-/* Back link styling */
-a[href="/main_page"] {
-  display: block;
-  margin: 20px auto;
-  text-align: center;
-  color: var(--accent-primary);
-  transition: color 0.3s ease;
-}
-
-a[href="/main_page"]:hover {
-  color: var(--accent-secondary);
-  text-decoration: underline;
-}
-
-/* Unified input & select styling */
-input[type="text"],
-input[type="date"],
-input[type="time"],
-select {
-  padding: 10px;
-  background: var(--bg-primary);
-  border: 1px solid var(--accent-primary);
-  border-radius: 5px;
-  color: var(--text-primary);
+  gap: 16px;
   width: 100%;
-  box-sizing: border-box;
-}
-
-input:focus,
-select:focus {
-  outline: none;
-  box-shadow: 0 0 5px var(--accent-primary);
-}
-
-/* Modal overlay */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-/* Modal content */
-.modal-content {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  margin: 10% auto;
-  padding: 20px;
-  border: 1px solid var(--accent-primary);
-  border-radius: 10px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 0 20px var(--accent-primary);
-  position: relative;
-}
-
-/* Ensure all text inside modals is visible */
-.modal-content h2,
-.modal-content p,
-.modal-content label,
-.modal-content span,
-.modal-content input,
-.modal-content select,
-.modal-content button {
-  color: var(--text-primary);
-}
-
-.modal-content ::placeholder {
-  color: var(--text-secondary);
-  opacity: 1;
-}
-
-/* Close button */
-.close {
-  color: var(--text-secondary);
-  position: absolute;
-  right: 16px;
-  top: 12px;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.close:hover,
-.close:focus {
-  color: var(--accent-secondary);
-  text-decoration: none;
-}
-
-/* Form layout */
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
 
 label {
+  display: block;
+  margin-bottom: 8px;
   color: var(--text-secondary);
-  margin-top: 10px;
+  font-weight: 500;
 }
 
-button[type="submit"] {
-  align-self: center;
-  margin-top: 20px;
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--input-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: border-color var(--transition-time);
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  h1 {
-    font-size: 2rem;
+.form-control:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d0d3d9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  padding-right: 40px;
+  background-color: var(--dropdown-bg);
+}
+
+select.form-control option {
+  background-color: var(--dropdown-bg);
+  color: var(--text-primary);
+  padding: 10px;
+}
+
+.rides-container {
+  margin-bottom: 32px;
+}
+
+.ride-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.ride-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  border: 1px solid var(--card-border);
+  transition: all var(--transition-time);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ride-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--hover-shadow);
+  border-color: var(--accent-primary);
+}
+
+.ride-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.route-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
+}
+
+.route-arrow {
+  color: var(--accent-primary);
+}
+
+.from, .to {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.from i, .to i {
+  color: var(--accent-primary);
+}
+
+.time-info {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-secondary);
+}
+
+.time-info span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ride-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: auto;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--modal-overlay);
+  z-index: 1000;
+  overflow: auto;
+}
+
+.modal-content {
+  background: var(--bg-primary);
+  border-radius: var(--border-radius);
+  max-width: 600px;
+  width: 90%;
+  padding: 24px;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--box-shadow);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalFadeIn 0.3s;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
   }
-  ul#rideList li {
-    padding: 10px;
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
   }
-  .modal-content {
-    margin: 5% auto;
-    width: 95%;
-  }
-  #filter-controls {
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.close {
+  cursor: pointer;
+  font-size: 28px;
+  color: var(--text-secondary);
+  transition: color var(--transition-time);
+}
+
+.close:hover {
+  color: var(--accent-primary);
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.ride-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.detail-group {
+  display: flex;
+  gap: 24px;
+}
+
+.detail-item {
+  flex: 1;
+}
+
+.detail-item p {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.contact-info {
+  margin-top: 8px;
+}
+
+footer {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--card-border);
+  text-align: center;
+}
+
+.back-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-time);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-link:hover {
+  color: var(--accent-primary);
+}
+
+.hidden {
+  display: none;
+}
+
+#no-rides-message {
+  text-align: center;
+  padding: 40px 0;
+}
+
+@media (max-width: 768px) {
+  header {
     flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .filter-controls {
+    flex-direction: column;
+  }
+  
+  .form-row {
+    flex-direction: column;
+  }
+  
+  .ride-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .detail-group {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .modal-content {
+    width: 95%;
+    max-height: 80vh;
+    padding: 16px;
+  }
+}
+
+@media (max-height: 700px) {
+  .modal-content {
+    top: 0;
+    transform: translate(-50%, 0);
+    margin: 20px 0;
+    max-height: calc(100vh - 40px);
+  }
+  
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -10px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
   }
 }

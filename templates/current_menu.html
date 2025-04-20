@@ -10,96 +10,52 @@
 
 <body>
     <div class="container">
-        <!-- Day Selector Wheel -->
-        <div class="day-wheel-container">
-            <div class="day-wheel">
-                <div class="day-circle">
-                    
-                    
-                    
-                    
-                    
-
-                    
-                    <span class="day-letter" data-day="M">
-                        M
-                    </span>
-                    
-                    
-                    
-                    
-                    
-
-                    
-                    <span class="day-letter" data-day="T">
-                        T
-                    </span>
-                    
-                    
-                    
-                    
-                    
-
-                    
-                    <span class="day-letter active" data-day="W">
-                        W
-                    </span>
-                    
-                    
-                    
-                    
-                    
-
-                    
-                    <span class="day-letter" data-day="Th">
-                        Th
-                    </span>
-                    
-                    
-                    
-                    
-                    
-
-                    
-                    <span class="day-letter" data-day="F">
-                        F
-                    </span>
-                    
-                    
-                    
-                    
-                    
-
-                    
-                    <span class="day-letter" data-day="Sa">
-                        Sa
-                    </span>
-                    
-                    
-                    
-                    
-                    
-
-                    
-                    <span class="day-letter" data-day="Su">
-                        Su
-                    </span>
-                    
-                </div>
-            </div>
+        <!-- Tab Navigation -->
+        <div class="tab-nav" role="tablist" aria-label="Select a day">
+            
+            <button class="tab-button" role="tab" aria-controls="monday-menu" aria-selected="false"
+                data-day="monday" tabindex="0">
+                Mon
+            </button>
+            
+            <button class="tab-button" role="tab" aria-controls="tuesday-menu" aria-selected="false"
+                data-day="tuesday" tabindex="0">
+                Tue
+            </button>
+            
+            <button class="tab-button" role="tab" aria-controls="wednesday-menu" aria-selected="false"
+                data-day="wednesday" tabindex="0">
+                Wed
+            </button>
+            
+            <button class="tab-button" role="tab" aria-controls="thursday-menu" aria-selected="false"
+                data-day="thursday" tabindex="0">
+                Th
+            </button>
+            
+            <button class="tab-button" role="tab" aria-controls="friday-menu" aria-selected="false"
+                data-day="friday" tabindex="0">
+                Fri
+            </button>
+            
+            <button class="tab-button" role="tab" aria-controls="saturday-menu" aria-selected="false"
+                data-day="saturday" tabindex="0">
+                Sa
+            </button>
+            
+            <button class="tab-button" role="tab" aria-controls="sunday-menu" aria-selected="false"
+                data-day="sunday" tabindex="0">
+                Su
+            </button>
+            
         </div>
 
         <!-- Content Area -->
         <div class="content-area">
             
-            
-            <div class="day-header" id="monday-header"
-                class="day-header hidden">
-                MONDAY
+            <div class="day-header" id="monday-header">
             </div>
-
-            
-            <div class="menu-content" id="monday-menu">
+            <div class="menu-content" id="monday-menu" role="tabpanel">
                 
                 <div class="meal-section">
                     <h3>Breakfast</h3>
@@ -191,14 +147,9 @@
                 
             </div>
             
-            
-            <div class="day-header" id="tuesday-header"
-                class="day-header hidden">
-                TUESDAY
+            <div class="day-header" id="tuesday-header">
             </div>
-
-            
-            <div class="menu-content" id="tuesday-menu">
+            <div class="menu-content" id="tuesday-menu" role="tabpanel">
                 
                 <div class="meal-section">
                     <h3>Breakfast</h3>
@@ -290,14 +241,9 @@
                 
             </div>
             
-            
-            <div class="day-header" id="wednesday-header"
-                class="day-header">
-                WEDNESDAY
+            <div class="day-header" id="wednesday-header">
             </div>
-
-            
-            <div class="menu-content active" id="wednesday-menu">
+            <div class="menu-content" id="wednesday-menu" role="tabpanel">
                 
                 <div class="meal-section">
                     <h3>Breakfast</h3>
@@ -387,14 +333,9 @@
                 
             </div>
             
-            
-            <div class="day-header" id="thursday-header"
-                class="day-header hidden">
-                THURSDAY
+            <div class="day-header" id="thursday-header">
             </div>
-
-            
-            <div class="menu-content" id="thursday-menu">
+            <div class="menu-content" id="thursday-menu" role="tabpanel">
                 
                 <div class="meal-section">
                     <h3>Breakfast</h3>
@@ -484,14 +425,9 @@
                 
             </div>
             
-            
-            <div class="day-header" id="friday-header"
-                class="day-header hidden">
-                FRIDAY
+            <div class="day-header" id="friday-header">
             </div>
-
-            
-            <div class="menu-content" id="friday-menu">
+            <div class="menu-content" id="friday-menu" role="tabpanel">
                 
                 <div class="meal-section">
                     <h3>Breakfast</h3>
@@ -579,14 +515,9 @@
                 
             </div>
             
-            
-            <div class="day-header" id="saturday-header"
-                class="day-header hidden">
-                SATURDAY
+            <div class="day-header" id="saturday-header">
             </div>
-
-            
-            <div class="menu-content" id="saturday-menu">
+            <div class="menu-content" id="saturday-menu" role="tabpanel">
                 
                 <div class="meal-section">
                     <h3>Breakfast</h3>
@@ -678,14 +609,9 @@
                 
             </div>
             
-            
-            <div class="day-header" id="sunday-header"
-                class="day-header hidden">
-                SUNDAY
+            <div class="day-header" id="sunday-header">
             </div>
-
-            
-            <div class="menu-content" id="sunday-menu">
+            <div class="menu-content" id="sunday-menu" role="tabpanel">
                 
                 <div class="meal-section">
                     <h3>Breakfast</h3>
@@ -778,70 +704,57 @@
         </div>
     </div>
 
-    <script src="/menu.js"></script>
     <script>
-        // Get all day letters and menu items
-        const dayLetters = document.querySelectorAll('.day-letter');
+        const tabButtons = document.querySelectorAll('.tab-button');
         const dayHeaders = document.querySelectorAll('.day-header');
         const menuContents = document.querySelectorAll('.menu-content');
 
-        // Initialize with Wednesday active (as set in the template)
-        showDay('W');
+        // Show day logic
+        function showDay(day) {
+            // Remove active states
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+                button.setAttribute('aria-selected', 'false');
+            });
+            dayHeaders.forEach(header => header.classList.remove('active'));
+            menuContents.forEach(content => {
+                content.classList.remove('active');
+                content.style.opacity = 0;
+            });
 
-        // Add click event listeners to day letters
-        dayLetters.forEach(letter => {
-            letter.addEventListener('click', function () {
-                const day = this.getAttribute('data-day');
-                showDay(day);
+            // Set new active states
+            const activeButton = document.querySelector(`.tab-button[data-day="${day}"]`);
+            const activeHeader = document.getElementById(`${day}-header`);
+            const activeMenu = document.getElementById(`${day}-menu`);
+
+            if (activeButton && activeHeader && activeMenu) {
+                activeButton.classList.add('active');
+                activeButton.setAttribute('aria-selected', 'true');
+                activeHeader.classList.add('active');
+                activeMenu.classList.add('active');
+                setTimeout(() => activeMenu.style.opacity = 1, 50);
+            }
+
+            localStorage.setItem('activeDay', day);
+        }
+
+        // Add event listeners
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => showDay(button.dataset.day));
+            button.addEventListener('keypress', e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    showDay(button.dataset.day);
+                }
             });
         });
 
-        // Function to show the selected day
-        function showDay(day) {
-            // Reset all active states
-            dayLetters.forEach(letter => letter.classList.remove('active'));
-            dayHeaders.forEach(header => header.style.display = 'none');
-            menuContents.forEach(content => content.classList.remove('active'));
-
-            // Set active state for the clicked day-letter
-            document.querySelector(`.day-letter[data-day="${day}"]`).classList.add('active');
-
-            // Determine header and menu IDs based on the clicked day letter
-            let headerID, menuID;
-            switch (day) {
-                case 'M':
-                    headerID = 'monday-header';
-                    menuID = 'monday-menu';
-                    break;
-                case 'T':
-                    headerID = 'tuesday-header';
-                    menuID = 'tuesday-menu';
-                    break;
-                case 'W':
-                    headerID = 'wednesday-header';
-                    menuID = 'wednesday-menu';
-                    break;
-                case 'Th':
-                    headerID = 'thursday-header';
-                    menuID = 'thursday-menu';
-                    break;
-                case 'F':
-                    headerID = 'friday-header';
-                    menuID = 'friday-menu';
-                    break;
-                case 'Sa':
-                    headerID = 'saturday-header';
-                    menuID = 'saturday-menu';
-                    break;
-                case 'Su':
-                    headerID = 'sunday-header';
-                    menuID = 'sunday-menu';
-                    break;
-            }
-
-            document.getElementById(headerID).style.display = 'block';
-            document.getElementById(menuID).classList.add('active');
-        }
+        // Load previously selected or current day
+        window.addEventListener('load', () => {
+            const savedDay = localStorage.getItem('activeDay');
+            const today = new Date().toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+            const dayToShow = savedDay || today;
+            showDay(dayToShow);
+        });
     </script>
 </body>
 
